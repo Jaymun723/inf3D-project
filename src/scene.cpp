@@ -1,4 +1,5 @@
 #include "scene.hpp"
+#include "voxel/block.hpp"
 
 using namespace cgp;
 
