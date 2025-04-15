@@ -1,3 +1,4 @@
 build/
 inf3D-project.exe
 inf3D-project.pdb
+*.ini
