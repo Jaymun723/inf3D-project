@@ -10,7 +10,9 @@ class Block {
    */
 public:
   bool active; /** @property Doit-on afficher le block ou non ? */ // Pourquoi pas une fonction, et le paramètre en privé ?
-  Block();
-  void setActive(bool to_active);
   BlockType block_type;
+
+  Block();
+  void setActive(bool active);
+  void setBlockType(BlockType block_type);
 };
