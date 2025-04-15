@@ -27,7 +27,7 @@ set(CMAKE_CONFIGURATION_TYPES RelWithDebInfo)
 # List the files of the current local project 
 #    Default behavior: Automatically add all hpp and cpp files from src/ directory, and .glsl from shaders/
 #    You may want to change this definition in case of specific file structure
-file(GLOB_RECURSE src_files ${CMAKE_CURRENT_LIST_DIR}/src/**/*.[ch]pp ${CMAKE_CURRENT_LIST_DIR}/shaders/*.glsl)
+file(GLOB_RECURSE src_files ${CMAKE_CURRENT_LIST_DIR}/src/*.[ch]pp ${CMAKE_CURRENT_LIST_DIR}/shaders/*.glsl)
 
 
 # Generate the executable_name from the current directory name
