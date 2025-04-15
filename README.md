@@ -2,7 +2,7 @@
 
 Pour commencer :
 ```sh
-git clone --recurse-submodules https://github.com/drohmer/csc43043ep_practice_code.git
+git clone --recurse-submodules https://github.com/Jaymun723/inf3D-project.git
 ```
 
 ## Documentation
