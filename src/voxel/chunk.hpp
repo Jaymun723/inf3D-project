@@ -6,19 +6,23 @@ class Chunk {
 public:
   Chunk();
   ~Chunk();
-  void Render(environment_structure environment);
 
+  void Render(environment_structure environment);
+  void FullChunk();
+
+  bool IsLoaded();
+  void Load();
+  void UnLoad();
   void CreateMesh();
 
   cgp::vec3 m_position;
 
   static const int CHUNK_SIZE = 16;
-
-  void FullChunk();
-
   Block ***m_pBlocks;
 
 private: // The blocks data
+  bool m_loaded;
+
   int m_active_blocks;
 
   // cgp::mesh chunk_mesh;

@@ -3,6 +3,8 @@
 using namespace cgp;
 
 Chunk::Chunk() { // Create the blocks
+  m_loaded = false;
+
   m_pBlocks = new Block **[CHUNK_SIZE];
   for (int i = 0; i < CHUNK_SIZE; i++) {
     m_pBlocks[i] = new Block *[CHUNK_SIZE];
@@ -57,5 +59,20 @@ void Chunk::FullChunk() {
         m_pBlocks[x][y][z].block_type = BlockType_Default;
       }
     }
+  }
+}
+
+bool Chunk::IsLoaded() { return m_loaded; }
+
+void Chunk::Load() {
+  if (!m_loaded) {
+    CreateMesh();
+    m_loaded = true;
+  }
+}
+
+void Chunk::UnLoad() {
+  if (m_loaded) {
+    m_loaded = false
   }
 }
