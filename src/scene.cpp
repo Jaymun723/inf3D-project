@@ -12,11 +12,16 @@ void scene_structure::initialize() {
 
   display_info();
   global_frame.initialize_data_on_gpu(mesh_primitive_frame());
+
+  chunk.FullChunk();
+  chunk.CreateMesh();
 }
 
 void scene_structure::display_frame() {
   // Set the light to the current position of the camera
   environment.light = camera_control.camera_model.position();
+
+  chunk.Render(environment);
 
   if (gui.display_frame)
     draw(global_frame, environment);
