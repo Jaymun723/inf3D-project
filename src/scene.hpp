@@ -2,6 +2,7 @@
 
 #include "cgp/cgp.hpp"
 #include "environment.hpp"
+#include "voxel/chunk.hpp"
 
 // This definitions allow to use the structures: mesh, mesh_drawable, etc.
 // without mentionning explicitly cgp::
@@ -35,6 +36,7 @@ struct scene_structure : cgp::scene_inputs_generic {
   // ****************************** //
   // Elements and shapes of the scene
   // ****************************** //
+  Chunk chunk;
 
   // Timer used for the animation
   timer_basic timer;
