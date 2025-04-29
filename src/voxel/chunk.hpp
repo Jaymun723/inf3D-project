@@ -16,12 +16,11 @@ public:
 
   void FullChunk();
 
-  Block GetBlock(int x, int y, int z);
+  Block ***m_pBlocks;
 
 private: // The blocks data
   int m_active_blocks;
 
-  Block ***m_pBlocks;
   // cgp::mesh chunk_mesh;
   cgp::mesh_drawable m_chunk_drawable_mesh;
 };

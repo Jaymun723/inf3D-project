@@ -59,5 +59,3 @@ void Chunk::FullChunk() {
     }
   }
 }
-
-Block Chunk::GetBlock(int x, int y, int z) { return m_pBlocks[x][y][z]; }
