@@ -8,9 +8,10 @@ using namespace cgp;
 
 class Rule {
 	public:
-		Rule(std::vector<vec3> relative_positions, BlockType result);
+		Rule(std::vector<vec3> relative_positions, std::vector<BlockType> relative_types, BlockType result);
 		std::vector<vec3> relative_positions;
+		std::vector<BlockType> relative_types;
 		BlockType result;
-		bool applies_to(const vec3& pos) const;
-		void apply(const vec3& pos) const;
+		bool applies_to(const Chunk C, const vec3& pos) const;
+		void apply(Chunk C, const vec3& pos) const;
 };
