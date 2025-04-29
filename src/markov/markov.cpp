@@ -23,9 +23,9 @@ void MarkovRule::applyRule(const Chunk& C) {
 				for (int y = 0; y < C.CHUNK_SIZE; ++y) {
 					for (int z = 0; z < C.CHUNK_SIZE; ++z) {
 						vec3 pos = { x, y, z };
-						if (rule.applies_to(pos)) {
+						if (rule.applies_to(C, pos)) {
 							found = true;
-							rule.apply(pos);
+							rule.apply(C, pos);
 						}
 					}
 				}
