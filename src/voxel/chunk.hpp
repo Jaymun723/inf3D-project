@@ -16,6 +16,8 @@ public:
 
   void FullChunk();
 
+  Block GetBlock(int x, int y, int z);
+
 private: // The blocks data
   int m_active_blocks;
 
