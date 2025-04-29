@@ -16,10 +16,10 @@ bool Rule::applies_to(const Chunk C, const vec3& pos) const {
 		int y = pos.y + relative_pos.y;
 		int z = pos.z + relative_pos.z;
 		if (x < 0 || x >= Chunk::CHUNK_SIZE || y < 0 || y >= Chunk::CHUNK_SIZE || z < 0 || z >= Chunk::CHUNK_SIZE) {
-			return false; // Out of bounds
+			return false; 
 		}
 		if (C.m_pBlocks[x][y][z].block_type != relative_types[i]) {
-			return false; // Type mismatch
+			return false; 
 		}
 	}
 	return true;
@@ -27,5 +27,5 @@ bool Rule::applies_to(const Chunk C, const vec3& pos) const {
 
 
 void Rule::apply(Chunk C, const vec3& pos) const {
-	return;
+	C.m_pBlocks[pos.x][pos.y][pos.z].block_type = result;
 }

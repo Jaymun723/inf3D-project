@@ -31,6 +31,5 @@ void MarkovRule::applyRule(const Chunk& C) {
 				}
 			}
 		}
-
 	}
 }
