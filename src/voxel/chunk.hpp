@@ -1,3 +1,5 @@
+#pragma once
+
 #include "../environment.hpp"
 #include "block.hpp"
 #include "cgp/cgp.hpp"
