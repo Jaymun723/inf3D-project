@@ -5,11 +5,10 @@ Rule::Rule(std::vector<vec3> relative_positions, std::vector<BlockType> relative
 	relative_positions = relative_positions;
 	relative_types = relative_types;
 	result = result;
-	return;
 }
 
 
-bool Rule::applies_to(const Chunk C, const vec3& pos) const {
+bool Rule::applies_to(Chunk C, const vec3& pos) const {
 	for (int i = 0; i < relative_positions.size(); ++i) {
 		vec3 relative_pos = relative_positions[i];
 		int x = pos.x + relative_pos.x;
@@ -27,5 +26,8 @@ bool Rule::applies_to(const Chunk C, const vec3& pos) const {
 
 
 void Rule::apply(Chunk C, const vec3& pos) const {
-	C.m_pBlocks[pos.x][pos.y][pos.z].block_type = result;
+	int x = pos.x;
+	int y = pos.y;
+	int z = pos.z;
+	C.m_pBlocks[x][y][z].block_type = result;
 }
