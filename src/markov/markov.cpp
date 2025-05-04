@@ -4,19 +4,23 @@
 
 
 MarkovRule::MarkovRule() {
-	// Constructor implementation
-	return;
+	rules = {};
 }
 
 MarkovRule::MarkovRule(const std::vector<Rule>& initialRules) {
 	// Constructor implementation
 	rules = initialRules;
-	return;
 }
 
-void MarkovRule::applyRule(const Chunk& C) {
+
+void MarkovRule::addRule(const Rule& rule) {
+	rules.push_back(rule);
+}
+
+void MarkovRule::applyRule(const Chunk& C, int limit) {
 	bool found = true;
-	while (found) {
+	int i = 0;
+	while (found && (i < limit || limit < 0)) {
 		found = false;
 		for (const auto& rule : rules) {
 			for (int x = 0; x < C.CHUNK_SIZE; ++x) {
@@ -31,5 +35,10 @@ void MarkovRule::applyRule(const Chunk& C) {
 				}
 			}
 		}
+		++i;
 	}
+}
+
+void MarkovRule::applyRule(const Chunk& C) {
+	applyRule(C, -1);
 }

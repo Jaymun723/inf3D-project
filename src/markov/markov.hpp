@@ -18,5 +18,8 @@ class MarkovRule {
 		std::vector<Rule> rules;
 		MarkovRule();
 		MarkovRule(const std::vector<Rule>& initialRules);
+		void addRule(const Rule& rule);
 		void applyRule(const Chunk& C);
+		void applyRule(const Chunk& C, int limit);
+
 };
