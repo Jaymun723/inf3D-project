@@ -73,6 +73,6 @@ void Chunk::Load() {
 
 void Chunk::UnLoad() {
   if (m_loaded) {
-    m_loaded = false
+      m_loaded = false;
   }
 }
