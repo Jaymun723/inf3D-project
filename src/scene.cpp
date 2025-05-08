@@ -14,20 +14,25 @@ void scene_structure::initialize() {
   display_info();
   global_frame.initialize_data_on_gpu(mesh_primitive_frame());
 
-  chunk.FullChunk();
+  chunk.HalfChunk();
   chunk.CreateMesh();
 }
 
 void scene_structure::display_frame() {
-  // Set the light to the current position of the camera
-  environment.light = camera_control.camera_model.position();
+    // Set the light to the current position of the camera
+    environment.light = camera_control.camera_model.position();
 
-  keep_only_full.applyRule(chunk, 1);
+    keep_only_full.applyRule(chunk, 10);
 
-  chunk.Render(environment);
+    chunk.Render(environment);
 
-  if (gui.display_frame)
-    draw(global_frame, environment);
+    if (gui.display_frame)
+        draw(global_frame, environment);
+
+    if (gui.display_wireframe) {
+        draw_wireframe(global_frame, environment);
+        chunk.WireRender(environment);
+    }
 
   // Update the current time
   timer.update();
