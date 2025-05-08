@@ -7,7 +7,7 @@ Rule left_disapear = Rule(
 	{	BlockType_Default, 
 		BlockType_Empty, 
 	},
-	BlockType_Empty
+	BlockType_Default
 );
 
 

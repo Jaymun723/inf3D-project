@@ -22,7 +22,7 @@ void scene_structure::display_frame() {
   // Set the light to the current position of the camera
   environment.light = camera_control.camera_model.position();
 
-  // keep_only_full.applyRule(chunk, 1);
+  keep_only_full.applyRule(chunk, 1);
 
   chunk.Render(environment);
 

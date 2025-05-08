@@ -17,7 +17,7 @@ void MarkovRule::addRule(const Rule& rule) {
 	rules.push_back(rule);
 }
 
-void MarkovRule::applyRule(const Chunk& C, int limit) {
+void MarkovRule::applyRule(Chunk& C, int limit) {
 	bool found = true;
 	int i = 0;
 	while (found && (i < limit || limit < 0)) {
@@ -29,7 +29,7 @@ void MarkovRule::applyRule(const Chunk& C, int limit) {
 						vec3 pos = { x, y, z };
 						if (rule.applies_to(C, pos)) {
 							found = true;
-							rule.apply(C, pos);
+							//rule.apply(C, pos);
 						}
 					}
 				}
@@ -37,8 +37,9 @@ void MarkovRule::applyRule(const Chunk& C, int limit) {
 		}
 		++i;
 	}
+	C.CreateMesh();
 }
 
-void MarkovRule::applyRule(const Chunk& C) {
+void MarkovRule::applyRule(Chunk& C) {
 	applyRule(C, -1);
 }
