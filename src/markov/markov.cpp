@@ -27,17 +27,20 @@ void MarkovRule::applyRule(Chunk& C, int limit) {
 				for (int y = 0; y < C.CHUNK_SIZE; ++y) {
 					for (int z = 0; z < C.CHUNK_SIZE; ++z) {
 						vec3 pos = { x, y, z };
-						if (rule.applies_to(C, pos)) {
-							found = true;
-							//rule.apply(C, pos);
+						if (i < limit || limit < 0) {
+							if (rule.applies_to(C, pos)) {
+								found = true;
+								rule.apply(C, pos);
+								++i;
+							}
 						}
+						
 					}
 				}
 			}
 		}
-		++i;
 	}
-	C.CreateMesh();
+	// C.CreateMesh();
 }
 
 void MarkovRule::applyRule(Chunk& C) {
