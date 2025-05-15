@@ -7,10 +7,9 @@ MarkovRule::MarkovRule() {
 	rules = {};
 }
 
-MarkovRule::MarkovRule(const std::vector<Rule>& initialRules) {
-	// Constructor implementation
-	rules = initialRules;
-}
+MarkovRule::MarkovRule(const std::vector<Rule>& initialRules):
+	rules(std::move(initialRules))
+	{ }
 
 
 void MarkovRule::addRule(const Rule& rule) {
@@ -40,7 +39,7 @@ void MarkovRule::applyRule(Chunk& C, int limit) {
 			}
 		}
 	}
-	// C.CreateMesh();
+	C.CreateMesh();
 }
 
 void MarkovRule::applyRule(Chunk& C) {
