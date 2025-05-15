@@ -15,6 +15,8 @@ void scene_structure::initialize() {
   global_frame.initialize_data_on_gpu(mesh_primitive_frame());
 
   appear.applyRule(chunk, 1);
+  build_base.applyRule(chunk, -1);
+  elevate.applyRule(chunk, -1);
   chunk.CreateMesh();
 }
 
@@ -23,8 +25,7 @@ void scene_structure::display_frame() {
     environment.light = camera_control.camera_model.position();
 
     // keep_only_full.applyRule(chunk, 1);
-	build_base.applyRule(chunk, -1);
-    elevate.applyRule(chunk, -1);
+	
 
     chunk.Render(environment);
 

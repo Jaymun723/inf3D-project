@@ -14,5 +14,6 @@ class Rule {
 		BlockType result;
 		float probability;
 		bool applies_to(const Chunk &C, const vec3& pos) const;
+		bool applies_to(const Chunk& C, const vec3& pos, const Chunk& Cpx, const Chunk& Cmx, const Chunk& Cpy, const Chunk& Cmy, const Chunk& Cpz, const Chunk& Cmz) const;
 		void apply(Chunk &C, const vec3& pos) const;
 };
