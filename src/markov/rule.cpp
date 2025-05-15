@@ -1,10 +1,11 @@
 #include "rule.hpp"
 
 
-Rule::Rule(std::vector<vec3> relative_positions, std::vector<BlockType> relative_types, BlockType result): 
+Rule::Rule(std::vector<vec3> relative_positions, std::vector<BlockType> relative_types, BlockType result, float probability): 
 	relative_positions(std::move(relative_positions)),
 	relative_types(std::move(relative_types)),
-	result(result) { }
+	result(result),
+	probability(probability){ }
 
 
 bool Rule::applies_to(const Chunk &C, const vec3& pos) const {
@@ -20,7 +21,8 @@ bool Rule::applies_to(const Chunk &C, const vec3& pos) const {
 			return false; 
 		}
 	}
-	return true;
+	float x = ((float)rand() / (float)(RAND_MAX));
+	return (x < probability);
 }
 
 
