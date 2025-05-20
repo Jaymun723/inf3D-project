@@ -1,5 +1,6 @@
-#include "markov/markov.hpp"
+#pragma once
 
+#include "markov/markov.hpp"
 
 #include "cgp/cgp.hpp"
 
