@@ -26,6 +26,8 @@ void Chunk::WireRender(environment_structure environment) {
 }
 
 Chunk::~Chunk() { // Delete the blocks
+  m_chunk_drawable_mesh.clear();
+
   for (int i = 0; i < CHUNK_SIZE; ++i) {
     for (int j = 0; j < CHUNK_SIZE; ++j) {
       delete[] m_pBlocks[i][j];
@@ -42,12 +44,20 @@ void Chunk::CreateMesh() {
   for (int x = 0; x < CHUNK_SIZE; x++) {
     for (int y = 0; y < CHUNK_SIZE; y++) {
       for (int z = 0; z < CHUNK_SIZE; z++) {
-        if (m_pBlocks[x][y][z].block_type != BlockType_Empty) {
+        Block pBlock = m_pBlocks[x][y][z];
+        if (pBlock.block_type != BlockType_Empty) {
           m_active_blocks++;
           vec3 offset = Block::BLOCK_RENDER_SIZE * vec3(0.5, 0.5, 0.5);
-          chunk_mesh.push_back(mesh_primitive_cube(
-              offset + Block::BLOCK_RENDER_SIZE * vec3(x, y, z),
-              Block::BLOCK_RENDER_SIZE));
+
+          mesh cube = mesh_primitive_cube(offset + Block::BLOCK_RENDER_SIZE *
+                                                       vec3(x, y, z),
+                                          Block::BLOCK_RENDER_SIZE);
+
+          for (vec3 &color : cube.color) {
+            color = pBlock.getColor();
+          }
+
+          chunk_mesh.push_back(cube);
         }
       }
     }
@@ -85,6 +95,12 @@ void Chunk::Load() {
     CreateMesh();
     m_loaded = true;
   }
+}
+
+void Chunk::UpdateMesh() {
+  m_loaded = true;
+  m_chunk_drawable_mesh.clear();
+  CreateMesh();
 }
 
 void Chunk::UnLoad() {

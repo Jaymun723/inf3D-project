@@ -18,6 +18,8 @@ public:
   void Load();
   void UnLoad();
 
+  void UpdateMesh();
+
   bool m_should_render;
 
   cgp::vec3 m_position;
