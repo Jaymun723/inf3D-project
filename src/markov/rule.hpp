@@ -8,10 +8,12 @@ using namespace cgp;
 
 class Rule {
 	public:
-		Rule(std::vector<vec3> relative_positions, std::vector<BlockType> relative_types, BlockType result);
+		Rule(std::vector<vec3> relative_positions, std::vector<BlockType> relative_types, BlockType result, float probability);
 		std::vector<vec3> relative_positions;
 		std::vector<BlockType> relative_types;
 		BlockType result;
-		bool applies_to(Chunk C, const vec3& pos) const;
-		void apply(Chunk C, const vec3& pos) const;
+		float probability;
+		bool applies_to(const Chunk &C, const vec3& pos) const;
+		bool applies_to(const Chunk& C, const vec3& pos, const Chunk& Cpx, const Chunk& Cmx, const Chunk& Cpy, const Chunk& Cmy, const Chunk& Cpz, const Chunk& Cmz) const;
+		void apply(Chunk &C, const vec3& pos) const;
 };

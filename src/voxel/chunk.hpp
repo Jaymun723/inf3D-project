@@ -1,3 +1,5 @@
+#pragma once
+
 #include "../environment.hpp"
 #include "block.hpp"
 #include "cgp/cgp.hpp"
@@ -8,7 +10,9 @@ public:
   ~Chunk();
 
   void Render(environment_structure environment);
+  void WireRender(environment_structure environment);
   void FullChunk();
+  void HalfChunk();
 
   bool IsLoaded();
   void Load();

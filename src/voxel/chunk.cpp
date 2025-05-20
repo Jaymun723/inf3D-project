@@ -20,6 +20,11 @@ void Chunk::Render(environment_structure environment) {
   draw(m_chunk_drawable_mesh, environment);
 }
 
+void Chunk::WireRender(environment_structure environment) {
+  m_chunk_drawable_mesh.model.translation = m_position;
+  draw_wireframe(m_chunk_drawable_mesh, environment);
+}
+
 Chunk::~Chunk() { // Delete the blocks
   for (int i = 0; i < CHUNK_SIZE; ++i) {
     for (int j = 0; j < CHUNK_SIZE; ++j) {
@@ -57,6 +62,16 @@ void Chunk::FullChunk() {
   for (int x = 0; x < CHUNK_SIZE; x++) {
     for (int y = 0; y < CHUNK_SIZE; y++) {
       for (int z = 0; z < CHUNK_SIZE; z++) {
+        m_pBlocks[x][y][z].block_type = BlockType_Default;
+      }
+    }
+  }
+}
+
+void Chunk::HalfChunk() {
+  for (int x = 0; x < CHUNK_SIZE; x++) {
+    for (int y = 0; y < CHUNK_SIZE; y++) {
+      for (int z = 0; z < (x + y) / 2; z++) {
         m_pBlocks[x][y][z].block_type = BlockType_Default;
       }
     }

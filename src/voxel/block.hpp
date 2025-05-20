@@ -1,6 +1,6 @@
 #pragma once
 
-enum BlockType { BlockType_Empty, BlockType_Default };
+enum BlockType { BlockType_Empty, BlockType_Default, BlockType_Head };
 
 class Block {
   /**

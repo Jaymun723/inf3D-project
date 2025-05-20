@@ -1,5 +1,6 @@
 #include "scene.hpp"
 #include "voxel/block.hpp"
+#include "markov/rules_examples.hpp"
 
 using namespace cgp;
 
@@ -13,18 +14,30 @@ void scene_structure::initialize() {
   display_info();
   global_frame.initialize_data_on_gpu(mesh_primitive_frame());
 
-  chunk.FullChunk();
+  appear.applyRule(chunk, 1);
+  build_base.applyRule(chunk, -1);
+  elevate.applyRule(chunk, -1);
   chunk.CreateMesh();
 }
 
 void scene_structure::display_frame() {
-  // Set the light to the current position of the camera
-  environment.light = camera_control.camera_model.position();
+    // Set the light to the current position of the camera
+    environment.light = camera_control.camera_model.position();
 
-  chunk.Render(environment);
+    // keep_only_full.applyRule(chunk, 1);
+	
 
-  if (gui.display_frame)
-    draw(global_frame, environment);
+    chunk.Render(environment);
+
+    if (gui.display_frame)
+        draw(global_frame, environment);
+
+    if (gui.display_wireframe) {
+        if (gui.display_frame) {
+            draw_wireframe(global_frame, environment);
+        }
+        chunk.WireRender(environment);
+    }
 
   // Update the current time
   timer.update();
