@@ -13,7 +13,8 @@ public:
   bool IsLoaded();
   void Load();
   void UnLoad();
-  void CreateMesh();
+
+  bool m_should_render;
 
   cgp::vec3 m_position;
 
@@ -21,6 +22,7 @@ public:
   Block ***m_pBlocks;
 
 private: // The blocks data
+  void CreateMesh();
   bool m_loaded;
 
   int m_active_blocks;

@@ -4,6 +4,7 @@ using namespace cgp;
 
 Chunk::Chunk() { // Create the blocks
   m_loaded = false;
+  m_should_render = false;
 
   m_pBlocks = new Block **[CHUNK_SIZE];
   for (int i = 0; i < CHUNK_SIZE; i++) {
@@ -73,6 +74,6 @@ void Chunk::Load() {
 
 void Chunk::UnLoad() {
   if (m_loaded) {
-    m_loaded = false
+    m_loaded = false;
   }
 }
