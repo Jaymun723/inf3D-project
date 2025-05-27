@@ -14,10 +14,16 @@ void scene_structure::initialize() {
   display_info();
   global_frame.initialize_data_on_gpu(mesh_primitive_frame());
 
-  appear.applyRule(chunk, 1);
-  build_base.applyRule(chunk, -1);
-  elevate.applyRule(chunk, -1);
-  chunk.Load();
+  int first_id = manager.AddChunk(vec3(0, 0, 0));
+  // int second_id = manager.AddChunk(vec3(2, 0, 0));
+
+  // std::cout << "First id: " << first_id << ", Second id: " << second_id
+  //           << std::endl;
+
+  // appear.applyRule(chunk, 1);
+  // build_base.applyRule(chunk, -1);
+  // elevate.applyRule(chunk, -1);
+  // chunk.Load();
 }
 
 void scene_structure::display_frame() {
@@ -26,7 +32,8 @@ void scene_structure::display_frame() {
 
   // keep_only_full.applyRule(chunk, 1);
 
-  chunk.Render(environment);
+  // chunk.Render(environment);
+  manager.Render(environment);
 
   if (gui.display_frame)
     draw(global_frame, environment);
@@ -35,7 +42,8 @@ void scene_structure::display_frame() {
     if (gui.display_frame) {
       draw_wireframe(global_frame, environment);
     }
-    chunk.WireRender(environment);
+    manager.WireRender(environment);
+    // chunk.WireRender(environment);
   }
 
   // Update the current time

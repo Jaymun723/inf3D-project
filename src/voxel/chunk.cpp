@@ -93,7 +93,7 @@ bool Chunk::IsLoaded() { return m_loaded; }
 void Chunk::Load() {
   if (!m_loaded) {
     CreateMesh();
-    m_loaded = true;
+    // m_loaded = true;
   }
 }
 

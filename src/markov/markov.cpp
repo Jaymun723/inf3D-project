@@ -31,7 +31,7 @@ void MarkovRule::applyRule(Chunk &C, int limit) {
       }
     }
   }
-  C.UpdateMesh();
+  C.Load();
 }
 
 void MarkovRule::applyRule(Chunk &C) { applyRule(C, -1); }
