@@ -7,9 +7,18 @@
 
 using namespace cgp;
 
+
 class Rule {
 public:
-  Rule(std::vector<vec3> relative_positions,
+    virtual ~Rule() = default;
+    virtual bool applies_to(const Chunk& C, const vec3& pos) const = 0;
+	virtual void apply(Chunk& C, const vec3& pos) const = 0;
+};
+
+
+class OldRule {
+public:
+  OldRule(std::vector<vec3> relative_positions,
        std::vector<BlockType> relative_types, BlockType result,
        float probability);
   std::vector<vec3> relative_positions;
@@ -22,3 +31,4 @@ public:
                   const Chunk &Cpz, const Chunk &Cmz) const;
   void apply(Chunk &C, const vec3 &pos) const;
 };
+

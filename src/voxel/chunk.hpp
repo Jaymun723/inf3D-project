@@ -13,6 +13,7 @@ public:
   void WireRender(environment_structure environment);
   void FullChunk();
   void HalfChunk();
+  void RandomChunk(float density);
 
   bool IsLoaded();
   void Load();

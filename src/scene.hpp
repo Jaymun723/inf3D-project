@@ -37,8 +37,8 @@ struct scene_structure : cgp::scene_inputs_generic {
   // ****************************** //
   // Elements and shapes of the scene
   // ****************************** //
-  // Chunk chunk;
-  ChunkManager manager;
+  Chunk chunk;
+  // ChunkManager manager;
 
   // Timer used for the animation
   timer_basic timer;

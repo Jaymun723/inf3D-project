@@ -1,14 +1,14 @@
 #include "rule.hpp"
 
 
-Rule::Rule(std::vector<vec3> relative_positions, std::vector<BlockType> relative_types, BlockType result, float probability): 
+OldRule::OldRule(std::vector<vec3> relative_positions, std::vector<BlockType> relative_types, BlockType result, float probability): 
 	relative_positions(std::move(relative_positions)),
 	relative_types(std::move(relative_types)),
 	result(result),
 	probability(probability){ }
 
 
-bool Rule::applies_to(const Chunk &C, const vec3& pos) const {
+bool OldRule::applies_to(const Chunk &C, const vec3& pos) const {
 	for (int i = 0; i < relative_positions.size(); ++i) {
 		vec3 relative_pos = relative_positions[i];
 		int x = pos.x + relative_pos.x;
@@ -26,7 +26,7 @@ bool Rule::applies_to(const Chunk &C, const vec3& pos) const {
 }
 
 
-bool Rule::applies_to(const Chunk& C, const vec3& pos, const Chunk& Cpx, const Chunk& Cmx, const Chunk& Cpy, const Chunk& Cmy, const Chunk& Cpz, const Chunk& Cmz) const {
+bool OldRule::applies_to(const Chunk& C, const vec3& pos, const Chunk& Cpx, const Chunk& Cmx, const Chunk& Cpy, const Chunk& Cmy, const Chunk& Cpz, const Chunk& Cmz) const {
 
 	for (int i = 0; i < relative_positions.size(); ++i) {
 		vec3 relative_pos = relative_positions[i];
@@ -60,7 +60,7 @@ bool Rule::applies_to(const Chunk& C, const vec3& pos, const Chunk& Cpx, const C
 
 }
 
-void Rule::apply(Chunk &C, const vec3& pos) const {
+void OldRule::apply(Chunk &C, const vec3& pos) const {
 	int x = pos.x;
 	int y = pos.y;
 	int z = pos.z;

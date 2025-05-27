@@ -88,6 +88,18 @@ void Chunk::HalfChunk() {
   }
 }
 
+void Chunk::RandomChunk(float density) {
+	for (int x = 0; x < CHUNK_SIZE; x++) {
+		for (int y = 0; y < CHUNK_SIZE; y++) {
+			for (int z = 0; z < CHUNK_SIZE; z++) {
+				if (static_cast<float>(rand()) / RAND_MAX < density) {
+					m_pBlocks[x][y][z].block_type = BlockType_Default;
+				}
+			}
+		}
+	}
+}
+
 bool Chunk::IsLoaded() { return m_loaded; }
 
 void Chunk::Load() {

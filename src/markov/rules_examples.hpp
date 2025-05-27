@@ -6,7 +6,24 @@
 
 using namespace cgp;
 
-extern MarkovRule keep_only_full;
-extern MarkovRule build_base;
-extern MarkovRule elevate;
-extern MarkovRule appear;
+extern OldMarkovRule keep_only_full;
+extern OldMarkovRule build_base;
+extern OldMarkovRule elevate;
+extern OldMarkovRule appear;
+
+
+class LeftDisappearRule : public Rule {
+public:
+    bool applies_to(const Chunk& C, const vec3& pos) const override;
+    void apply(Chunk& C, const vec3& pos) const override;
+};
+
+extern MarkovRule testLeftDisappear;
+
+class AppearOnHeadRule : public Rule {
+public:
+    bool applies_to(const Chunk& C, const vec3& pos) const override;
+    void apply(Chunk& C, const vec3& pos) const override;
+};
+
+extern MarkovRule AppearOnHead;
