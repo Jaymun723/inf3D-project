@@ -35,8 +35,12 @@ void scene_structure::display_frame() {
 
   // keep_only_full.applyRule(chunk, 1);
   // testLeftDisappear.applyRule(chunk, 1);
-  if (!AppearOnHead.applyRule(chunk, 1)) {
-      std::cout << "End" << std::endl;
+
+  if (!AppearOnHead.applyRule(chunk, 3)) {
+      int random_x = rand() % chunk.CHUNK_SIZE;
+      int random_y = rand() % chunk.CHUNK_SIZE;
+      int random_z = rand() % chunk.CHUNK_SIZE;
+      chunk.m_pBlocks[random_x][random_y][random_z].block_type = BlockType_Head;
   }
   
   chunk.Render(environment);
