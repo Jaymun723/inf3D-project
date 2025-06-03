@@ -8,7 +8,7 @@ void scene_structure::initialize() {
   camera_control.initialize(inputs,
                             window); // Give access to the inputs and window
                                      // global state to the camera controler
-  camera_control.set_rotation_axis_z();
+  // camera_control.set_rotation_axis_z();
   camera_control.look_at({3.0f, 2.0f, 2.0f}, {0, 0, 0}, {0, 0, 1});
 
   display_info();
@@ -36,7 +36,7 @@ void scene_structure::display_frame() {
   // keep_only_full.applyRule(chunk, 1);
   // testLeftDisappear.applyRule(chunk, 1);
 
-  if (!AppearOnHead.applyRule(chunk, 3)) {
+  if (!AppearOnHead.applyRule(chunk, -1)) {
       int random_x = rand() % chunk.CHUNK_SIZE;
       int random_y = rand() % chunk.CHUNK_SIZE;
       int random_z = rand() % chunk.CHUNK_SIZE;
