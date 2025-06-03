@@ -2,11 +2,11 @@
 // #include "voxel/block.hpp"
 #pragma once
 #include "markov/rule.hpp"
+#include <memory>
 
 #include "cgp/cgp.hpp"
 
 using namespace cgp;
-
 
 class OldMarkovRule {
 public:
@@ -18,21 +18,17 @@ public:
   void applyRule(Chunk &C, int limit);
 };
 
-
 class MarkovRule {
 public:
-    std::vector<std::shared_ptr<Rule>> rules;
+  std::vector<std::shared_ptr<Rule>> rules;
 
-    MarkovRule() = default;
+  MarkovRule() = default;
 
-    MarkovRule(const std::vector<std::shared_ptr<Rule>>& initialRules)
-        : rules(initialRules) {
-    }
+  MarkovRule(const std::vector<std::shared_ptr<Rule>> &initialRules)
+      : rules(initialRules) {}
 
-    void addRule(const std::shared_ptr<Rule>& rule) {
-        rules.push_back(rule);
-    }
+  void addRule(const std::shared_ptr<Rule> &rule) { rules.push_back(rule); }
 
-    bool applyRule(Chunk& C);
-    bool applyRule(Chunk& C, int limit);
+  bool applyRule(Chunk &C);
+  bool applyRule(Chunk &C, int limit);
 };
