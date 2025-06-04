@@ -2,14 +2,14 @@
 
 // #include "voxel/chunk.hpp"
 
-OldMarkovRule::OldMarkovRule() { rules = {}; }
+BasicMR::BasicMR() { rules = {}; }
 
-OldMarkovRule::OldMarkovRule(const std::vector<OldRule> &initialRules)
+BasicMR::BasicMR(const std::vector<BasicR> &initialRules)
     : rules(std::move(initialRules)) {}
 
-void OldMarkovRule::addRule(const OldRule &rule) { rules.push_back(rule); }
+void BasicMR::addRule(const BasicR &rule) { rules.push_back(rule); }
 
-void OldMarkovRule::applyRule(Chunk &C, int limit) {
+void BasicMR::applyRule(Chunk &C, int limit) {
   bool found = true;
   int i = 0;
   while (found && (i < limit || limit < 0)) {
@@ -34,34 +34,46 @@ void OldMarkovRule::applyRule(Chunk &C, int limit) {
   C.Load();
 }
 
-void OldMarkovRule::applyRule(Chunk &C) { applyRule(C, -1); }
+void BasicMR::applyRule(Chunk &C) { applyRule(C, -1); }
 
 
-bool MarkovRule::applyRule(Chunk& C, int limit) {
+bool ExtendedMR::applyRule(Chunk& C, int limit) {
     bool found = true;
     int i = 0;
     while (found && (i < limit || limit < 0)) {
         found = false;
         for (const auto& rule : rules) {
-            for (int x = 0; x < C.CHUNK_SIZE; ++x) {
+            for (int z = 0; z < C.CHUNK_SIZE; ++z) {
                 for (int y = 0; y < C.CHUNK_SIZE; ++y) {
-                    for (int z = 0; z < C.CHUNK_SIZE; ++z) {
+                    for (int x = 0; x < C.CHUNK_SIZE; ++x) {
                         vec3 pos = { x, y, z };
                         if (i < limit || limit < 0) {
                             if (rule->applies_to(C, pos)) {
                                 found = true;
                                 rule->apply(C, pos);
                                 ++i;
+								// std::cout << "Applied rule at position: " << pos << std::endl;
                             }
                         }
+                        else {
+                            break;
+                        }
                     }
+					if (i >= limit && limit >= 0) {
+						break;
+					}
                 }
+                if (i >= limit && limit >= 0) {
+                    break;
+                }
+            }
+            if (i >= limit && limit >= 0) {
+                break;
             }
         }
     }
-    C.UpdateMesh();
     return (i > 0);
 }
 
 
-bool MarkovRule::applyRule(Chunk& C) { return applyRule(C, -1); }
+bool ExtendedMR::applyRule(Chunk& C) { return applyRule(C, -1); }

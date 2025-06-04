@@ -25,7 +25,7 @@ void scene_structure::initialize() {
   //build_base.applyRule(chunk, -1);
   //elevate.applyRule(chunk, -1);
   //chunk.RandomChunk(0.3f);
-  chunk.m_pBlocks[10][10][10].block_type = BlockType_Head;
+  //chunk.m_pBlocks[10][10][10].block_type = BlockType_Head;
   chunk.Load();
 }
 
@@ -35,13 +35,9 @@ void scene_structure::display_frame() {
 
   // keep_only_full.applyRule(chunk, 1);
   // testLeftDisappear.applyRule(chunk, 1);
+  
+  build_tree_step = build_tree(chunk, build_tree_step, 5);
 
-  if (!AppearOnHead.applyRule(chunk, -1)) {
-      int random_x = rand() % chunk.CHUNK_SIZE;
-      int random_y = rand() % chunk.CHUNK_SIZE;
-      int random_z = rand() % chunk.CHUNK_SIZE;
-      chunk.m_pBlocks[random_x][random_y][random_z].block_type = BlockType_Head;
-  }
   
   chunk.Render(environment);
   // manager.Render(environment);

@@ -2,7 +2,13 @@
 
 #include "cgp/cgp.hpp"
 
-enum BlockType { BlockType_Empty, BlockType_Default, BlockType_Head };
+enum BlockType { 
+	BlockType_Empty, 
+	BlockType_Default, 
+	BlockType_Head,
+	BlockType_Grass,
+	BlockType_Wood_Tmp,
+	BlockType_Wood};
 
 class Block {
   /**

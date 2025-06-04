@@ -6,10 +6,10 @@
 
 using namespace cgp;
 
-extern OldMarkovRule keep_only_full;
-extern OldMarkovRule build_base;
-extern OldMarkovRule elevate;
-extern OldMarkovRule appear;
+extern BasicMR keep_only_full;
+extern BasicMR build_base;
+extern BasicMR elevate;
+extern BasicMR appear;
 
 
 class LeftDisappearRule : public Rule {
@@ -18,7 +18,7 @@ public:
     void apply(Chunk& C, const vec3& pos) const override;
 };
 
-extern MarkovRule testLeftDisappear;
+extern ExtendedMR testLeftDisappear;
 
 class AppearOnHeadRule : public Rule {
 public:
@@ -26,4 +26,20 @@ public:
     void apply(Chunk& C, const vec3& pos) const override;
 };
 
-extern MarkovRule AppearOnHead;
+extern ExtendedMR AppearOnHead;
+
+class BuildGroundGrassRule : public Rule {
+public:
+    bool applies_to(const Chunk& C, const vec3& pos) const override;
+    void apply(Chunk& C, const vec3& pos) const override;
+};
+
+extern ExtendedMR BuildGroundGrass;
+
+class ExtendTrunkRule : public Rule {
+public:
+	bool applies_to(const Chunk& C, const vec3& pos) const override;
+	void apply(Chunk& C, const vec3& pos) const override;
+};
+
+int build_tree(Chunk& C, int step, int speed);

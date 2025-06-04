@@ -8,23 +8,23 @@
 
 using namespace cgp;
 
-class OldMarkovRule {
+class BasicMR {
 public:
-  std::vector<OldRule> rules;
-  OldMarkovRule();
-  OldMarkovRule(const std::vector<OldRule> &initialRules);
-  void addRule(const OldRule &rule);
+  std::vector<BasicR> rules;
+  BasicMR();
+  BasicMR(const std::vector<BasicR> &initialRules);
+  void addRule(const BasicR &rule);
   void applyRule(Chunk &C);
   void applyRule(Chunk &C, int limit);
 };
 
-class MarkovRule {
+class ExtendedMR {
 public:
   std::vector<std::shared_ptr<Rule>> rules;
 
-  MarkovRule() = default;
+  ExtendedMR() = default;
 
-  MarkovRule(const std::vector<std::shared_ptr<Rule>> &initialRules)
+  ExtendedMR(const std::vector<std::shared_ptr<Rule>> &initialRules)
       : rules(initialRules) {}
 
   void addRule(const std::shared_ptr<Rule> &rule) { rules.push_back(rule); }

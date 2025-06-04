@@ -16,9 +16,9 @@ public:
 };
 
 
-class OldRule {
+class BasicR {
 public:
-  OldRule(std::vector<vec3> relative_positions,
+  BasicR(std::vector<vec3> relative_positions,
        std::vector<BlockType> relative_types, BlockType result,
        float probability);
   std::vector<vec3> relative_positions;
