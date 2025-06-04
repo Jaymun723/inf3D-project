@@ -48,6 +48,7 @@ struct scene_structure : cgp::scene_inputs_generic {
   // Step counters used for Markov rules
   int build_tree_step = 0;
   int build_snake_step = 0;
+  int build_river_step = 0;
 
   // ****************************** //
   // Functions

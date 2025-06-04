@@ -98,3 +98,15 @@ void BuildGroundGrassRule::apply(Chunk& C, const vec3& pos) const {
 
 ExtendedMR BuildGroundGrass = ExtendedMR({ std::make_shared<BuildGroundGrassRule>() });
 
+
+
+bool BuildGroundGrassTmpRule::applies_to(const Chunk& C, const vec3& pos) const {
+    return general_BuildGround_rule_applies_to(C, pos, BlockType_Grass_Tmp);
+}
+
+void BuildGroundGrassTmpRule::apply(Chunk& C, const vec3& pos) const {
+    general_BuildGround_rule_apply(C, pos, BlockType_Grass_Tmp);
+}
+
+ExtendedMR BuildGroundGrassTmp = ExtendedMR({ std::make_shared<BuildGroundGrassTmpRule>() });
+
