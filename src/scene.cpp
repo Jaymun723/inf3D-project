@@ -1,5 +1,6 @@
 #include "scene.hpp"
 #include "markov/rules_examples.hpp"
+#include "markov/structures/tree.hpp"
 #include "voxel/block.hpp"
 
 using namespace cgp;
@@ -36,7 +37,7 @@ void scene_structure::display_frame() {
   // keep_only_full.applyRule(chunk, 1);
   // testLeftDisappear.applyRule(chunk, 1);
   
-  build_tree_step = build_tree(chunk, build_tree_step, 5);
+  build_tree_step = build_tree(chunk, build_tree_step, 1);
 
   
   chunk.Render(environment);

@@ -14,10 +14,16 @@ vec3 Block::getColor() {
     return vec3(0, 1, 0);
 
   case BlockType_Wood_Tmp:
-      return vec3(0.5f, 0.5f, 0);
+      return vec3(0.5f, 0.25f, 0);
 
   case BlockType_Wood:
 	  return vec3(0.5f, 0.25f, 0);
+
+  case BlockType_Leaf_Tmp:
+	  return vec3(0, 1, 0.2f);
+
+  case BlockType_Leaf:
+      return vec3(0, 1, 0.2f);
 
   case BlockType_Empty:
   default:

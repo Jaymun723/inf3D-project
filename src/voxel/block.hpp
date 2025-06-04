@@ -8,7 +8,9 @@ enum BlockType {
 	BlockType_Head,
 	BlockType_Grass,
 	BlockType_Wood_Tmp,
-	BlockType_Wood};
+	BlockType_Wood,
+	BlockType_Leaf_Tmp,
+	BlockType_Leaf};
 
 class Block {
   /**

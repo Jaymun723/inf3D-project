@@ -35,11 +35,3 @@ public:
 };
 
 extern ExtendedMR BuildGroundGrass;
-
-class ExtendTrunkRule : public Rule {
-public:
-	bool applies_to(const Chunk& C, const vec3& pos) const override;
-	void apply(Chunk& C, const vec3& pos) const override;
-};
-
-int build_tree(Chunk& C, int step, int speed);
