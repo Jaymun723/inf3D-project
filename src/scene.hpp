@@ -44,11 +44,14 @@ struct scene_structure : cgp::scene_inputs_generic {
   // Timer used for the animation
   timer_basic timer;
 
+  int frame_count = 0; // Counter for the number of frames displayed
+
 
   // Step counters used for Markov rules
   int build_tree_step = 0;
   int build_snake_step = 0;
   int build_river_step = 0;
+  int build_house_step = 0;
 
   // ****************************** //
   // Functions

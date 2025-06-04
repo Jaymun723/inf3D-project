@@ -56,28 +56,33 @@ void BasicMR::applyRule(Chunk &C) { applyRule(C, -1); }
 bool ExtendedMR::applyRule(Chunk& C, int limit) {
     bool found = true;
     int i = 0;
-    while (found && (i < limit || limit < 0)) {
-        found = false;
-        for (const auto& rule : rules) {
-			std::vector<int> positions = generate_random_indices(C.CHUNK_SIZE * C.CHUNK_SIZE * C.CHUNK_SIZE, C.CHUNK_SIZE * C.CHUNK_SIZE * C.CHUNK_SIZE);
-            for (int pos_index = 0; pos_index < positions.size(); ++pos_index) {
-                int z = positions[pos_index] / (C.CHUNK_SIZE * C.CHUNK_SIZE);
-                int y = (positions[pos_index] / C.CHUNK_SIZE) % C.CHUNK_SIZE;
-                int x = positions[pos_index] % C.CHUNK_SIZE;
-                vec3 pos = { x, y, z };
-                if (i < limit || limit < 0) {
-                    if (rule->applies_to(C, pos)) {
-                        found = true;
-                        rule->apply(C, pos);
-                        ++i;
-                    }
+    std::vector<std::shared_ptr<Rule>> rules_to_apply;
+    std::vector<vec3> positions_to_apply;
+
+    found = false;
+    for (const auto& rule : rules) {
+		std::vector<int> positions = generate_random_indices(C.CHUNK_SIZE * C.CHUNK_SIZE * C.CHUNK_SIZE, C.CHUNK_SIZE * C.CHUNK_SIZE * C.CHUNK_SIZE);
+        for (int pos_index = 0; pos_index < positions.size(); ++pos_index) {
+            int z = positions[pos_index] / (C.CHUNK_SIZE * C.CHUNK_SIZE);
+            int y = (positions[pos_index] / C.CHUNK_SIZE) % C.CHUNK_SIZE;
+            int x = positions[pos_index] % C.CHUNK_SIZE;
+            vec3 pos = { x, y, z };
+            if (i < limit || limit < 0) {
+                if (rule->applies_to(C, pos)) {
+                    found = true;
+					rules_to_apply.push_back(rule);
+					positions_to_apply.push_back(pos);
+                    ++i;
                 }
-                else {
-                    break;
-                }
+            }
+            else {
+                break;
             }
         }
     }
+	for (size_t j = 0; j < rules_to_apply.size(); ++j) {
+		rules_to_apply[j]->apply(C, positions_to_apply[j]);
+	}
     return (i > 0);
 }
 

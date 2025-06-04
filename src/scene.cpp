@@ -3,6 +3,7 @@
 #include "markov/structures/tree.hpp"
 #include "markov/structures/snake.hpp"
 #include "markov/structures/river.hpp"
+#include "markov/structures/house.hpp"
 #include "voxel/block.hpp"
 using namespace cgp;
 
@@ -29,11 +30,15 @@ void scene_structure::initialize() {
 void scene_structure::display_frame() {
   // Set the light to the current position of the camera
   environment.light = camera_control.camera_model.position();
+  ++frame_count;
 
-
-  // build_snake_step = build_snake(chunk, build_snake_step, 1);
-  // build_tree_step = build_tree(chunk, build_tree_step, 1);
-  build_river_step = build_river(chunk, build_river_step, 1);
+  if (frame_count % 10 == 0) {
+      // build_snake_step = build_snake(chunk, build_snake_step, 1);
+      // build_tree_step = build_tree(chunk, build_tree_step, 1);
+      // build_river_step = build_river(chunk, build_river_step, 1);
+      build_house_step = build_house(chunk, build_house_step, 5);
+  }
+  
 
   chunk.Render(environment);
   // manager.Render(environment);

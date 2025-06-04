@@ -28,11 +28,18 @@ vec3 Block::getColor() {
   case BlockType_Leaf:
       return vec3(0, 1, 0.2f);
 
+
   case BlockType_Rainbow:
       return vec3(rand_uniform(0.0f, 1.0f), rand_uniform(0.0f, 1.0f), rand_uniform(0.0f, 1.0f));
 
   case BlockType_Water:
 	  return vec3(0.0f, 0.0f, 1.0f);
+
+  case BlockType_Plank_Tmp:
+      return vec3(1, 0, 0);
+
+  case BlockType_Plank:
+	  return vec3(0.8f, 0.52f, 0.25f);
 
   case BlockType_Empty:
   default:

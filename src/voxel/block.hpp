@@ -13,7 +13,9 @@ enum BlockType {
 	BlockType_Leaf_Tmp,
 	BlockType_Leaf,
 	BlockType_Rainbow,
-	BlockType_Water};
+	BlockType_Water,
+	BlockType_Plank_Tmp,
+	BlockType_Plank};
 
 class Block {
   /**

@@ -94,7 +94,6 @@ int build_river_aux(Chunk& C, int step) {
 		return step;
 	}
 
-	C.UpdateMesh();
 	return step;
 }
 

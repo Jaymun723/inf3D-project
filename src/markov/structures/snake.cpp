@@ -75,7 +75,6 @@ int build_snake_aux(Chunk& C, int step) {
         return step;
     }
 
-    C.UpdateMesh();
 	return step;
 }
 
@@ -83,5 +82,6 @@ int build_snake(Chunk& C, int step, int speed) {
     for (int i = 0; i < speed; ++i) {
 		step = build_snake_aux(C, step);
     }
+    C.UpdateMesh();
 	return step;
 }
