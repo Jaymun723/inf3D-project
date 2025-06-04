@@ -14,14 +14,14 @@ void ExtendTrunkRule::apply(Chunk& C, const vec3& pos) const {
     int x = pos.x;
     int y = pos.y;
     int z = pos.z;
-    int MAX_TRUNK_HEIGHT = 10; // Maximum height for the trunk extension
-    if (rand() % 7 == 0 || z >= MAX_TRUNK_HEIGHT) { // Randomly decide to extend the trunk
-        C.m_pBlocks[x][y][z].block_type = BlockType_Leaf_Tmp; // Set the current block to Wood
+    int MAX_TRUNK_HEIGHT = 10; 
+    if (rand() % 7 == 0 || z >= MAX_TRUNK_HEIGHT) {
+        C.m_pBlocks[x][y][z].block_type = BlockType_Leaf_Tmp;
     }
     else {
-        C.m_pBlocks[x][y][z].block_type = BlockType_Wood_Tmp; // Set the current block to Wood_Tmp
+        C.m_pBlocks[x][y][z].block_type = BlockType_Wood_Tmp; 
     }
-    C.m_pBlocks[x][y][z - 1].block_type = BlockType_Wood; // Set the block below to Wood
+    C.m_pBlocks[x][y][z - 1].block_type = BlockType_Wood;
 }
 
 ExtendedMR ExtendTrunk = ExtendedMR({ std::make_shared<ExtendTrunkRule>() });

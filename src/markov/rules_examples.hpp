@@ -20,13 +20,6 @@ public:
 
 extern ExtendedMR testLeftDisappear;
 
-class AppearOnHeadRule : public Rule {
-public:
-    bool applies_to(const Chunk& C, const vec3& pos) const override;
-    void apply(Chunk& C, const vec3& pos) const override;
-};
-
-extern ExtendedMR AppearOnHead;
 
 class BuildGroundGrassRule : public Rule {
 public:

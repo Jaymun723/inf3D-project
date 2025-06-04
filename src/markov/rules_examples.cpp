@@ -87,55 +87,6 @@ void LeftDisappearRule::apply(Chunk &C, const vec3 &pos) const {
 std::shared_ptr<Rule> leftDisappear = std::make_shared<LeftDisappearRule>();
 ExtendedMR testLeftDisappear = ExtendedMR({leftDisappear});
 
-bool AppearOnHeadRule::applies_to(const Chunk &C, const vec3 &pos) const {
-  int x = pos.x;
-  int y = pos.y;
-  int z = pos.z;
-  if (C.m_pBlocks[x][y][z].block_type == BlockType_Head) {
-    vec3 directions[6] = {vec3(1, 0, 0),  vec3(-1, 0, 0), vec3(0, 1, 0),
-                          vec3(0, -1, 0), vec3(0, 0, 1),  vec3(0, 0, -1)};
-    for (const vec3 &dir : directions) {
-      vec3 new_pos = pos + dir;
-      if (new_pos.x < 0 || new_pos.x >= C.CHUNK_SIZE || new_pos.y < 0 ||
-          new_pos.y >= C.CHUNK_SIZE || new_pos.z < 0 ||
-          new_pos.z >= C.CHUNK_SIZE) {
-        continue; // Out of bounds
-      }
-      if (C.m_pBlocks[(int)new_pos.x][(int)new_pos.y][(int)new_pos.z]
-              .block_type == BlockType_Empty) {
-        return true; // Found an empty block adjacent to the head
-      }
-    }
-  }
-  return false;
-}
-
-void AppearOnHeadRule::apply(Chunk &C, const vec3 &pos) const {
-  // std::cout << "Applying AppearOnHeadRule at position: " << pos << std::endl;
-  int MAX_TRIES = 10;
-  int x = pos.x;
-  int y = pos.y;
-  int z = pos.z;
-  int random_idx = rand() % 6; // Randomly choose one of the 6 directions
-  for (int i = 0; i < MAX_TRIES; ++i) {
-    vec3 directions[6] = {vec3(1, 0, 0),  vec3(-1, 0, 0), vec3(0, 1, 0),
-                          vec3(0, -1, 0), vec3(0, 0, 1),  vec3(0, 0, -1)};
-    vec3 new_pos = pos + directions[random_idx];
-    if (new_pos.x < 0 || new_pos.x >= C.CHUNK_SIZE || new_pos.y < 0 ||
-        new_pos.y >= C.CHUNK_SIZE || new_pos.z < 0 ||
-        new_pos.z >= C.CHUNK_SIZE) {
-      continue;
-    }
-    C.m_pBlocks[x][y][z].block_type =
-        BlockType_Default; // Set the current block to Default
-    C.m_pBlocks[(int)new_pos.x][(int)new_pos.y][(int)new_pos.z].block_type =
-        BlockType_Head;
-
-    break;
-  }
-}
-
-ExtendedMR AppearOnHead = ExtendedMR({std::make_shared<AppearOnHeadRule>()});
 
 bool BuildGroundGrassRule::applies_to(const Chunk& C, const vec3& pos) const {
 	return general_BuildGround_rule_applies_to(C, pos, BlockType_Grass);

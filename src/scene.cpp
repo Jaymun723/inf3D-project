@@ -1,12 +1,13 @@
 #include "scene.hpp"
 #include "markov/rules_examples.hpp"
 #include "markov/structures/tree.hpp"
+#include "markov/structures/snake.hpp"
 #include "voxel/block.hpp"
-
 using namespace cgp;
 
 void scene_structure::initialize() {
-  camera_control.initialize(inputs,
+    srand((unsigned int)time(NULL));
+    camera_control.initialize(inputs,
                             window); // Give access to the inputs and window
                                      // global state to the camera controler
   // camera_control.set_rotation_axis_z();
@@ -21,25 +22,16 @@ void scene_structure::initialize() {
   // std::cout << "First id: " << first_id << ", Second id: " << second_id
   //           << std::endl;
 
-  
-  //appear.applyRule(chunk, 1);
-  //build_base.applyRule(chunk, -1);
-  //elevate.applyRule(chunk, -1);
-  //chunk.RandomChunk(0.3f);
-  //chunk.m_pBlocks[10][10][10].block_type = BlockType_Head;
-  chunk.Load();
+    chunk.Load();
 }
 
 void scene_structure::display_frame() {
   // Set the light to the current position of the camera
   environment.light = camera_control.camera_model.position();
 
-  // keep_only_full.applyRule(chunk, 1);
-  // testLeftDisappear.applyRule(chunk, 1);
-  
-  build_tree_step = build_tree(chunk, build_tree_step, 1);
 
-  
+  build_snake_step = build_snake(chunk, build_snake_step, 1);
+
   chunk.Render(environment);
   // manager.Render(environment);
 
