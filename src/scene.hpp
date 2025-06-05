@@ -13,18 +13,20 @@ using cgp::numarray;
 using cgp::timer_basic;
 using cgp::vec3;
 
-struct gui_parameters {
+struct gui_parameters
+{
   bool display_frame = true;
   bool display_wireframe = false;
 };
 
 // The structure of the custom scene
-struct scene_structure : cgp::scene_inputs_generic {
+struct scene_structure : cgp::scene_inputs_generic
+{
 
   // ****************************** //
   // Elements and shapes of the scene
   // ****************************** //
-  //camera_controller_orbit_euler camera_control;
+  // camera_controller_orbit_euler camera_control;
   camera_controller_first_person camera_control;
   camera_projection_perspective camera_projection;
   window_structure window;
@@ -32,29 +34,24 @@ struct scene_structure : cgp::scene_inputs_generic {
   mesh_drawable global_frame;        // The standard global frame
   environment_structure environment; // Standard environment controler
   input_devices
-      inputs; // Storage for inputs status (mouse, keyboard, window dimension)
+      inputs;         // Storage for inputs status (mouse, keyboard, window dimension)
   gui_parameters gui; // Standard GUI element storage
 
   // ****************************** //
   // Elements and shapes of the scene
   // ****************************** //
-  Chunk chunk;
-  // ChunkManager manager;
+  ChunkManager manager;
 
   // Timer used for the animation
   timer_basic timer;
 
   int frame_count = 0; // Counter for the number of frames displayed
 
-
   // Step counters used for Markov rules
-  int build_tree_step = 0;
-  int build_snake_step = 0;
-  int build_river_step = 0;
-  int build_house_step = 0;
-  int build_Xroad_step = 0;
-  int build_crossroads_step = 0;
-  int build_maze_step = 0;
+  // int build_tree_step = 0;
+  // int build_snake_step = 0;
+  // int build_river_step = 0;
+  // int build_house_step = 0;
 
   // ****************************** //
   // Functions
@@ -63,7 +60,7 @@ struct scene_structure : cgp::scene_inputs_generic {
   void initialize(); // Standard initialization to be called before the
                      // animation loop
   void
-  display_frame(); // The frame display to be called within the animation loop
+  display_frame();    // The frame display to be called within the animation loop
   void display_gui(); // The display of the GUI, also called within the
                       // animation loop
 

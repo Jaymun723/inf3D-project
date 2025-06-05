@@ -22,6 +22,9 @@ public:
 private:
   std::vector<Chunk> m_chunks;
   std::unordered_map<Int3, Chunk *, Int3Hasher> m_chunk_map;
+  Int3 m_previous_player_chunk_position;
+
+  std::vector<Int3> m_loaded_chunks;
 
   // std::vector<Chunk *> m_render_list;
   // std::vector<Chunk *> m_load_list;

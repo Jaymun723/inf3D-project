@@ -9,7 +9,18 @@ ChunkManager::ChunkManager()
 
 void ChunkManager::Update(vec3 player_position)
 {
-  // Step
+  // Step 1, compute chunk player position
+  Int3 player_chunk_position = Int3(player_position / Chunk::RENDER_CHUNK_SIZE.ToVec());
+  // If same position as before, do nothing
+  if (player_chunk_position == m_previous_player_chunk_position)
+  {
+    return;
+  }
+  m_previous_player_chunk_position = player_chunk_position;
+
+  // Step 2, iterate over loaded chunks, unload the distant ones
+
+  // Step 3, verify that chunks around the player are all present, if not create them, and loaded, if not load them
 }
 
 int ChunkManager::AddChunk(vec3 position)
@@ -36,7 +47,7 @@ Chunk &ChunkManager::GetChunk(int id)
 Chunk &ChunkManager::GetChunk(int id, Directions neigh)
 {
   Chunk &origin = m_chunks.at(id);
-  Int3 position = Int3(origin.m_position).neighboor(neigh);
+  Int3 position = Int3(origin.m_position).Neighboor(neigh);
 
   return GetChunk(position);
 }
