@@ -17,16 +17,19 @@ void scene_structure::initialize()
                             window); // Give access to the inputs and window
                                      // global state to the camera controler
   // camera_control.set_rotation_axis_z();
-  camera_control.look_at({3.0f, 2.0f, 2.0f}, {0, 0, 0}, {0, 0, 1});
+  // camera_control.look_at({3.0f, 2.0f, 2.0f}, {0, 0, 0}, {0, 0, 1});
+
+  camera_control.look_at({0, 0, 0.2}, {1, 0, 0.2});
+  camera_control.set_rotation_axis_z();
 
   display_info();
   global_frame.initialize_data_on_gpu(mesh_primitive_frame());
 
-  int first_id = manager.AddChunk(vec3(0, 0, 0));
+  // int first_id = manager.AddChunk(vec3(0, 0, 0));
 
-  std::cout << "First id: " << first_id << std::endl;
+  // std::cout << "First id: " << first_id << std::endl;
 
-  Chunk &chunk = manager.GetChunk(first_id);
+  // Chunk &chunk = manager.GetChunk(first_id);
   // faire tes trucs avec chunk
 }
 
@@ -44,6 +47,7 @@ void scene_structure::display_frame()
   //   build_house_step = build_house(chunk, build_house_step, 5);
   // }
 
+  manager.Update(camera_control.camera_model.position_camera);
   manager.Render(environment);
 
   if (gui.display_frame)
@@ -66,6 +70,7 @@ void scene_structure::display_gui()
 {
   ImGui::Checkbox("Frame", &gui.display_frame);
   ImGui::Checkbox("Wireframe", &gui.display_wireframe);
+  // ImGui::SliderFloat3("Camera position", &gui.camera_position[0], -4, 4);
 }
 
 void scene_structure::mouse_move_event()

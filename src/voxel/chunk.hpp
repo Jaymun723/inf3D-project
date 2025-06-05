@@ -10,12 +10,14 @@ class Chunk
 public:
   Chunk();
   Chunk(vec3 position);
+  Chunk(Int3 position);
   ~Chunk();
 
   void Render(const environment_structure &environment);
   void WireRender(const environment_structure &environment);
   void FullChunk();
   void HalfChunk();
+  void FlatChunk();
   void RandomChunk(float density);
 
   bool IsLoaded();
@@ -24,7 +26,7 @@ public:
 
   void UpdateMesh();
 
-  bool m_should_render;
+  bool m_should_render = true;
 
   cgp::vec3 m_position;
 
@@ -37,9 +39,8 @@ public:
 
 private: // The blocks data
   void CreateMesh();
-  bool m_loaded;
-
-  int m_active_blocks;
+  bool m_loaded = false;
+  int m_active_blocks = 0;
 
   // cgp::mesh chunk_mesh;
   cgp::mesh_drawable m_chunk_drawable_mesh;

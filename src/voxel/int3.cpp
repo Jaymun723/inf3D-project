@@ -48,7 +48,17 @@ float Int3::sqared_dist(const Int3 &other) const
   return (other.x - x) * (other.x - x) + (other.y - y) * (other.y - y) + (other.z - z) * (other.z - z);
 }
 
+int Int3::Manhattan(const Int3 &other) const
+{
+  return std::abs(other.x - x) + std::abs(other.y - y) + std::abs(other.z - z);
+}
+
 bool Int3::operator==(const Int3 &other) const
 {
   return x == other.x && y == other.y && z == other.z;
+}
+
+Int3 Int3::operator+(const Int3 &other) const
+{
+  return Int3(x + other.x, y + other.y, z + other.z);
 }

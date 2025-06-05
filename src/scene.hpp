@@ -17,6 +17,8 @@ struct gui_parameters
 {
   bool display_frame = true;
   bool display_wireframe = false;
+
+  vec3 camera_position;
 };
 
 // The structure of the custom scene
@@ -27,7 +29,7 @@ struct scene_structure : cgp::scene_inputs_generic
   // Elements and shapes of the scene
   // ****************************** //
   // camera_controller_orbit_euler camera_control;
-  camera_controller_first_person camera_control;
+  camera_controller_2d_displacement camera_control;
   camera_projection_perspective camera_projection;
   window_structure window;
 

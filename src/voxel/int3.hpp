@@ -27,8 +27,10 @@ struct Int3
   vec3 ToVec() const;
 
   float sqared_dist(const Int3 &other) const;
+  int Manhattan(const Int3 &other) const;
 
   bool operator==(const Int3 &other) const;
+  Int3 operator+(const Int3 &other) const;
 };
 
 struct Int3Hasher

@@ -5,13 +5,10 @@ using namespace cgp;
 
 const Int3 Chunk::BLOCK_CHUNK_SIZE = Int3(32, 32, 32);
 
-const Int3 Chunk::RENDER_CHUNK_SIZE = Int3(2, 2, 2);
+const Int3 Chunk::RENDER_CHUNK_SIZE = Int3(1, 1, 1);
 
 Chunk::Chunk()
-{ // Create the blocks
-  m_loaded = false;
-  m_should_render = false;
-
+{
   m_pBlocks = new Block **[BLOCK_CHUNK_SIZE.x];
   for (int i = 0; i < BLOCK_CHUNK_SIZE.x; i++)
   {
@@ -23,9 +20,13 @@ Chunk::Chunk()
   }
 }
 
-Chunk::Chunk(vec3 position) : Chunk()
+Chunk::Chunk(cgp::vec3 position) : Chunk()
 {
   m_position = position;
+}
+
+Chunk::Chunk(Int3 position) : Chunk(position.ToVec())
+{
 }
 
 void Chunk::Render(const environment_structure &environment)
@@ -40,12 +41,15 @@ void Chunk::Render(const environment_structure &environment)
 void Chunk::WireRender(const environment_structure &environment)
 {
   m_chunk_drawable_mesh.model.translation = m_position;
+  m_chunk_drawable_mesh.model.scaling_xyz = {((float)RENDER_CHUNK_SIZE.x) / ((float)BLOCK_CHUNK_SIZE.x),
+                                             ((float)RENDER_CHUNK_SIZE.y) / ((float)BLOCK_CHUNK_SIZE.y),
+                                             ((float)RENDER_CHUNK_SIZE.z) / ((float)BLOCK_CHUNK_SIZE.z)};
   draw_wireframe(m_chunk_drawable_mesh, environment);
 }
 
 Chunk::~Chunk()
 { // Delete the blocks
-  std::cout << "Deconstructor called on Chunk" << std::endl;
+  std::cout << "Deconstructor called on Chunk at (" << m_position.x << ", " << m_position.y << ", " << m_position.z << ")" << std::endl;
   m_chunk_drawable_mesh.clear();
 
   for (int i = 0; i < BLOCK_CHUNK_SIZE.x; ++i)
@@ -129,6 +133,17 @@ void Chunk::HalfChunk()
   }
 }
 
+void Chunk::FlatChunk()
+{
+  for (int x = 0; x < BLOCK_CHUNK_SIZE.x; x++)
+  {
+    for (int y = 0; y < BLOCK_CHUNK_SIZE.y; y++)
+    {
+      m_pBlocks[x][y][0].block_type = BlockType_Default;
+    }
+  }
+}
+
 void Chunk::RandomChunk(float density)
 {
   for (int x = 0; x < BLOCK_CHUNK_SIZE.x; x++)
@@ -153,14 +168,25 @@ void Chunk::Load()
   if (!m_loaded)
   {
     CreateMesh();
-    // m_loaded = true;
+    m_should_render = false;
+    m_loaded = true;
   }
 }
 
 void Chunk::UpdateMesh()
 {
+  if (!m_should_render)
+  {
+    return;
+  }
+
+  if (m_loaded)
+  {
+    m_chunk_drawable_mesh.clear();
+  }
+
+  m_should_render = false;
   m_loaded = true;
-  m_chunk_drawable_mesh.clear();
   CreateMesh();
 }
 
@@ -168,6 +194,8 @@ void Chunk::UnLoad()
 {
   if (m_loaded)
   {
+    m_chunk_drawable_mesh.clear();
+    m_should_render = true;
     m_loaded = false;
   }
 }

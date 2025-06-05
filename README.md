@@ -9,12 +9,12 @@ git clone --recurse-submodules https://github.com/Jaymun723/inf3D-project.git
 
 *Partie : optimisation*
 
-1. Finir le chunk manager
+1. ~~Finir le chunk manager~~
 2. Optimisation du rendu des mesh : au lieu que la mesh contienne tous les cubes, seuls les faces visibles doivent être envoyées
 
 *Partie : rendre le truc utilisable*
 
-3. Caméra bougeable: personnage avec de la "physique" ? caméra libre qui peut tout explorer ?
+3. ~~Caméra bougeable: personnage avec de la "physique" ? caméra libre qui peut tout explorer ?~~
 
 *Partie : rendre le truc joli*
 
