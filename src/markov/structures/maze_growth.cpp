@@ -110,7 +110,7 @@ ExtendedMR AppearWhite = ExtendedMR({ std::make_shared<AppearWhiteRule>() });
 int build_maze_aux(Chunk& C, int step) {
 	switch (step) {
 	case 0:
-		if (BuildBlackChunk.applyRule(C, 1 + rand()%100)) {
+		if (BuildBlackChunk.applyRule(C, 50 + rand()%100)) {
 			if (rand() % 100 == 0) {
 				step = 1;
 			}
@@ -137,7 +137,7 @@ int build_maze_aux(Chunk& C, int step) {
 		break;
 
 	case 4:
-		if (CleanMaze.applyRule(C, 20 + rand()%100)) {
+		if (CleanMaze.applyRule(C, 50 + rand()%100)) {
 			break;
 		}
 		step = 5;

@@ -18,6 +18,7 @@ enum BlockType
 	BlockType_Plank_Tmp,
 	BlockType_Plank,
 	BlockType_Flat_Roof,
+	BlockType_Pillar,
 	BlockType_Road_Tmp,
 	BlockType_Road,
 	BlockType_White_Line_Tmp,

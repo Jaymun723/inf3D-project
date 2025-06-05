@@ -1,12 +1,8 @@
 #include "house.hpp"
 #include <windows.h>
 
-bool BuildGroundRule::applies_to(const Chunk &C, const vec3 &pos) const
+bool BuildGroundRule::applies_to(const Chunk &C, const vec3 &pos) const 
 {
-	if (C.m_pBlocks[(int)pos.x][(int)pos.y][(int)pos.z].block_type != BlockType_Grass)
-	{
-		return false;
-	}
 	if (pos.x == 0 || pos.x == C.BLOCK_CHUNK_SIZE.x - 1 || pos.y == 0 || pos.y == C.BLOCK_CHUNK_SIZE.y - 1)
 	{
 		return false; // Don't build on the edges of the chunk
@@ -219,6 +215,9 @@ ExtendedMR AppearNewGround = ExtendedMR({std::make_shared<AppearNewGroundRule>()
 
 bool CleanSingleBlocksRule::applies_to(const Chunk &C, const vec3 &pos) const
 {
+	if (C.m_pBlocks[(int)pos.x][(int)pos.y][(int)pos.z].block_type == BlockType_Empty) {
+		return false;
+	}
 	vec3 directions[4] = {vec3(1, 0, 0), vec3(-1, 0, 0), vec3(0, 1, 0), vec3(0, -1, 0)};
 	for (const vec3 &dir : directions)
 	{
@@ -244,6 +243,54 @@ void CleanSingleBlocksRule::apply(Chunk &C, const vec3 &pos) const
 }
 
 ExtendedMR CleanSingleBlocks = ExtendedMR({std::make_shared<CleanSingleBlocksRule>()});
+
+
+bool BuildPillarsRule::applies_to(const Chunk& C, const vec3& pos) const
+{
+	int x = (int)pos.x;
+	int y = (int)pos.y;
+	int z = (int)pos.z;
+	if (C.m_pBlocks[x][y][z].block_type != BlockType_Empty) {
+		return false;
+	}
+	if (z + 1 == C.BLOCK_CHUNK_SIZE.z) {
+		return false;
+	}
+	if (C.m_pBlocks[x][y][z + 1].block_type == BlockType_Pillar) {
+		return true;
+	}
+	if (C.m_pBlocks[x][y][z + 1].block_type != BlockType_Plank
+		&& C.m_pBlocks[x][y][z + 1].block_type != BlockType_Flat_Roof) {
+		return false;
+	}
+	int count = 0;
+	vec3 directions[4] = { vec3(1, 0, 1), vec3(-1, 0, 1), vec3(0, 1, 1), vec3(0, -1, 1) };
+	for (const vec3& dir : directions)
+	{
+		vec3 new_pos = pos + dir;
+		if (new_pos.x < 0 || new_pos.x >= C.BLOCK_CHUNK_SIZE.x || new_pos.y < 0 || new_pos.y >= C.BLOCK_CHUNK_SIZE.y || new_pos.z < 0 || new_pos.z >= C.BLOCK_CHUNK_SIZE.z)
+		{
+			continue;
+		}
+		if (C.m_pBlocks[(int)new_pos.x][(int)new_pos.y][(int)new_pos.z].block_type == BlockType_Plank
+			|| C.m_pBlocks[(int)new_pos.x][(int)new_pos.y][(int)new_pos.z].block_type == BlockType_Flat_Roof)
+		{
+			++count;
+		}
+	}
+	return count == 2;
+}
+
+void BuildPillarsRule::apply(Chunk& C, const vec3& pos) const
+{
+	int x = pos.x;
+	int y = pos.y;
+	int z = pos.z;
+	C.m_pBlocks[x][y][z].block_type = BlockType_Pillar;
+}
+
+ExtendedMR BuildPillar = ExtendedMR({ std::make_shared<BuildPillarsRule>() });
+
 
 int build_house_aux(Chunk &C, int step)
 {
@@ -272,62 +319,59 @@ int build_house_aux(Chunk &C, int step)
 		break;
 
 	case 3:
-		if (BuildGroundPlank.applyRule(C, -1))
-		{
-			if (rand() % 4 == 0)
-			{
-				step = 4;
-			}
-			break;
-		}
+		BuildGroundPlank.applyRule(C, -1);
 		step = 4;
 		break;
 
 	case 4:
-		if (MakeMiddleDef.applyRule(C, -1))
+		if (BuildGroundPlank.applyRule(C, -1))
 		{
+			if (rand() % 4 == 0)
+			{
+				step = 5;
+			}
 			break;
 		}
 		step = 5;
 		break;
 
 	case 5:
-		if (Elevate.applyRule(C, -1))
+		if (MakeMiddleDef.applyRule(C, -1))
 		{
-			if (rand() % 4 == 0)
-			{
-				step = 7;
-			}
 			break;
 		}
-		step = 7;
+		step = 6;
 		break;
 
 	case 6:
-		if (BuildRoof.applyRule(C, -1))
+		if (Elevate.applyRule(C, -1))
 		{
+			if (rand() % 6 == 0)
+			{
+				step = 8;
+			}
 			break;
 		}
 		step = 8;
 		break;
 
 	case 7:
-		if (BuildFlatRoof.applyRule(C, -1))
-		{
-			step = 8;
-			break;
-		}
-
-	case 8:
-		if (MakeExtDef.applyRule(C, -1))
+		if (BuildRoof.applyRule(C, -1))
 		{
 			break;
 		}
 		step = 9;
 		break;
 
+	case 8:
+		if (BuildFlatRoof.applyRule(C, -1))
+		{
+			step = 9;
+			break;
+		}
+
 	case 9:
-		if (RemovePlankTmp.applyRule(C, -1))
+		if (MakeExtDef.applyRule(C, -1))
 		{
 			break;
 		}
@@ -335,9 +379,17 @@ int build_house_aux(Chunk &C, int step)
 		break;
 
 	case 10:
+		if (RemovePlankTmp.applyRule(C, -1))
+		{
+			break;
+		}
+		step = 11;
+		break;
+
+	case 11:
 		if (rand() % 6 == 0)
 		{
-			step = 11;
+			step = 12;
 		}
 		else
 		{
@@ -346,12 +398,23 @@ int build_house_aux(Chunk &C, int step)
 		}
 		break;
 
-	case 11:
+	case 12:
+		std::cout << "Reach cleaning single blocks step" << std::endl;
+
 		if (CleanSingleBlocks.applyRule(C, -1))
 		{
 			break;
 		}
-		step = 12;
+		step = 13;
+		break;
+
+	case 13:
+		std::cout << "Reach pillars step" << std::endl;
+		if (BuildPillar.applyRule(C, -1))
+		{
+			break;
+		}
+		step = 14;
 		break;
 
 	default:

@@ -17,13 +17,14 @@ ExtendedMR BuildBasicXRoad = ExtendedMR({ std::make_shared<BuildBasicRoadRule>()
 
 
 bool MakeXSidewalkRule::applies_to(const Chunk& C, const vec3& pos) const {
+	int size = C.BLOCK_CHUNK_SIZE.y / 8;
 	int x = (int)pos.x;
 	int y = (int)pos.y;
 	int z = (int)pos.z;
 	if (C.m_pBlocks[x][y][z].block_type != BlockType_Road_Tmp && C.m_pBlocks[x][y][z].block_type != BlockType_Road) {
 		return false;
 	}
-	if (y < 1 || y >= C.BLOCK_CHUNK_SIZE.y - 1) {
+	if (y < size || y >= C.BLOCK_CHUNK_SIZE.y - size) {
 		return true;
 	}
 	return false;

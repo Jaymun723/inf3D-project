@@ -44,6 +44,9 @@ vec3 Block::getColor() {
   case BlockType_Flat_Roof:
 	  return vec3(0.2f, 0.52f, 0.25f);
 
+  case BlockType_Pillar:
+	  return vec3(0.9f, 0.9f, 0.9f);
+
   case BlockType_Road_Tmp:
 	  return vec3(0.5f, 0.5f, 0.5f);
 
