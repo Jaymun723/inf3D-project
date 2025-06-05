@@ -81,16 +81,19 @@ ExtendedMR ExtendLeaf = ExtendedMR({std::make_shared<ExtendLeafRule>()});
 
 int build_tree_aux(Chunk &C, int step)
 {
+    int x, y;
     int x_t, y_t, z_t;
     switch (step)
     {
     case 0:
-        C.m_pBlocks[0][0][0].block_type = BlockType_Grass;
+		x = rand() % (C.BLOCK_CHUNK_SIZE.x / 2) + C.BLOCK_CHUNK_SIZE.x / 4;
+		y = rand() % (C.BLOCK_CHUNK_SIZE.y / 2) + C.BLOCK_CHUNK_SIZE.y / 4;
+        C.m_pBlocks[x][y][0].block_type = BlockType_Grass;
         step = 1;
         break;
 
     case 1:
-        if (BuildGroundGrass.applyRule(C, 5))
+        if (BuildGroundGrass.applyRule(C, 10))
         {
             break;
         }
