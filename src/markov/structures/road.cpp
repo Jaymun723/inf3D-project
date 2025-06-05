@@ -23,7 +23,7 @@ bool MakeXSidewalkRule::applies_to(const Chunk& C, const vec3& pos) const {
 	if (C.m_pBlocks[x][y][z].block_type != BlockType_Road_Tmp && C.m_pBlocks[x][y][z].block_type != BlockType_Road) {
 		return false;
 	}
-	if (y < 1 || y >= C.CHUNK_SIZE - 1) {
+	if (y < 1 || y >= C.BLOCK_CHUNK_SIZE.y - 1) {
 		return true;
 	}
 	return false;
@@ -75,7 +75,7 @@ int build_Xroad_aux(Chunk& C, int step) {
 	switch (step)
 	{
 	case 0:
-		for (int y = 0; y < C.CHUNK_SIZE; ++y) {
+		for (int y = 0; y < C.BLOCK_CHUNK_SIZE.y; ++y) {
 			C.m_pBlocks[0][y][0].block_type = BlockType_Road_Tmp;
 		}
 		step = 1;
@@ -94,7 +94,7 @@ int build_Xroad_aux(Chunk& C, int step) {
 		break;
 
 	case 3:
-		y = C.CHUNK_SIZE / 2;
+		y = C.BLOCK_CHUNK_SIZE.y / 2;
 		C.m_pBlocks[1][y][0].block_type = BlockType_White_Line_Tmp;
 		step = 4;
 		break;

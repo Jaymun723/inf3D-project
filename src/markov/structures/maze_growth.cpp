@@ -28,10 +28,10 @@ bool MakeMazeRule::applies_to(const Chunk& C, const vec3& pos) const {
 		vec3 pos1 = pos + directions1[ri];
 		vec3 pos2 = pos + directions2[ri];
 
-		if (pos1.x < 0 || pos1.x >= C.CHUNK_SIZE || pos1.y < 0 || pos1.y >= C.CHUNK_SIZE || pos1.z < 0 || pos1.z >= C.CHUNK_SIZE) {
+		if (pos1.x < 0 || pos1.x >= C.BLOCK_CHUNK_SIZE.x || pos1.y < 0 || pos1.y >= C.BLOCK_CHUNK_SIZE.y || pos1.z < 0 || pos1.z >= C.BLOCK_CHUNK_SIZE.z) {
 			continue; // Out of bounds
 		}
-		if (pos2.x < 0 || pos2.x >= C.CHUNK_SIZE || pos2.y < 0 || pos2.y >= C.CHUNK_SIZE || pos2.z < 0 || pos2.z >= C.CHUNK_SIZE) {
+		if (pos2.x < 0 || pos2.x >= C.BLOCK_CHUNK_SIZE.x || pos2.y < 0 || pos2.y >= C.BLOCK_CHUNK_SIZE.y || pos2.z < 0 || pos2.z >= C.BLOCK_CHUNK_SIZE.z) {
 			continue; // Out of bounds
 		}
 		if (C.m_pBlocks[(int)pos1.x][(int)pos1.y][(int)pos1.z].block_type != BlockType_Black
@@ -52,10 +52,10 @@ void MakeMazeRule::apply(Chunk& C, const vec3& pos) const {
 		vec3 pos1 = pos + directions1[ridx[ri]];
 		vec3 pos2 = pos + directions2[ridx[ri]];
 
-		if (pos1.x < 0 || pos1.x >= C.CHUNK_SIZE || pos1.y < 0 || pos1.y >= C.CHUNK_SIZE || pos1.z < 0 || pos1.z >= C.CHUNK_SIZE) {
+		if (pos1.x < 0 || pos1.x >= C.BLOCK_CHUNK_SIZE.x || pos1.y < 0 || pos1.y >= C.BLOCK_CHUNK_SIZE.y || pos1.z < 0 || pos1.z >= C.BLOCK_CHUNK_SIZE.z) {
 			continue; // Out of bounds
 		}
-		if (pos2.x < 0 || pos2.x >= C.CHUNK_SIZE || pos2.y < 0 || pos2.y >= C.CHUNK_SIZE || pos2.z < 0 || pos2.z >= C.CHUNK_SIZE) {
+		if (pos2.x < 0 || pos2.x >= C.BLOCK_CHUNK_SIZE.x || pos2.y < 0 || pos2.y >= C.BLOCK_CHUNK_SIZE.y || pos2.z < 0 || pos2.z >= C.BLOCK_CHUNK_SIZE.z) {
 			continue; // Out of bounds
 		}
 		if (C.m_pBlocks[(int)pos1.x][(int)pos1.y][(int)pos1.z].block_type != BlockType_Black
