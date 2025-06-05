@@ -192,6 +192,30 @@ void AppearNewGroundRule::apply(Chunk& C, const vec3& pos) const {
 ExtendedMR AppearNewGround = ExtendedMR({ std::make_shared<AppearNewGroundRule>() });
 
 
+bool CleanSingleBlocksRule::applies_to(const Chunk& C, const vec3& pos) const {
+	vec3 directions[4] = { vec3(1, 0, 0), vec3(-1, 0, 0), vec3(0, 1, 0), vec3(0, -1, 0) };
+	for (const vec3& dir : directions) {
+		vec3 new_pos = pos + dir;
+		if (new_pos.x < 0 || new_pos.x >= C.CHUNK_SIZE || new_pos.y < 0 || new_pos.y >= C.CHUNK_SIZE || new_pos.z < 0 || new_pos.z >= C.CHUNK_SIZE) {
+			continue;
+		}
+		if (C.m_pBlocks[(int)new_pos.x][(int)new_pos.y][(int)new_pos.z].block_type != BlockType_Empty) {
+			return false; // If any adjacent block is not empty, don't clean
+		}
+	}
+	return true;
+}
+
+
+void CleanSingleBlocksRule::apply(Chunk& C, const vec3& pos) const {
+	int x = pos.x;
+	int y = pos.y;
+	int z = pos.z;
+	C.m_pBlocks[x][y][z].block_type = BlockType_Empty; // Set the current block to empty
+}
+
+ExtendedMR CleanSingleBlocks = ExtendedMR({ std::make_shared<CleanSingleBlocksRule>() });
+
 int build_house_aux(Chunk& C, int step) {
     int x, y, z;
 	switch (step) {
@@ -277,6 +301,13 @@ int build_house_aux(Chunk& C, int step) {
 			AppearNewGround.applyRule(C, 1);
 			step = 3;
 		}
+		break;
+
+	case 11:
+		if (CleanSingleBlocks.applyRule(C, -1)) {
+			break;
+		}
+		step = 12;
 		break;
 
     default:

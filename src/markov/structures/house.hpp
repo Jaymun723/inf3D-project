@@ -59,5 +59,13 @@ public:
 	void apply(Chunk& C, const vec3& pos) const override;
 };
 
+
+class CleanSingleBlocksRule : public Rule {
+public:
+	bool applies_to(const Chunk& C, const vec3& pos) const override;
+	void apply(Chunk& C, const vec3& pos) const override;
+};
+
+
 int build_house(Chunk& C, int step, int speed);
 
