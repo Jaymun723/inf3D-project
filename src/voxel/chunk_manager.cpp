@@ -16,6 +16,11 @@ ChunkManager::ChunkManager()
   // std::cout << "Hello from ChunkManager constructor !" << std::endl;
 }
 
+void ChunkManager::Update(vec3 player_position)
+{
+  // Step
+}
+
 int ChunkManager::AddChunk(vec3 position)
 {
   // Construct Chunk directly in the vector
@@ -29,6 +34,30 @@ int ChunkManager::AddChunk(vec3 position)
   m_chunk_map[Int3(position)] = &chunk;
 
   return m_chunks.size() - 1;
+}
+
+Chunk &ChunkManager::GetChunk(int id)
+{
+  return m_chunks.at(id);
+}
+
+Chunk &ChunkManager::GetChunk(int id, Directions neigh)
+{
+  Chunk &origin = m_chunks.at(id);
+  Int3 position = Int3(origin.m_position).neighboor(neigh);
+
+  return GetChunk(position);
+}
+
+Chunk &ChunkManager::GetChunk(Int3 position)
+{
+  auto it = m_chunk_map.find(position);
+  if (it == m_chunk_map.end())
+  {
+    throw std::out_of_range("Chunk not found at given position.");
+  }
+
+  return *(it->second); // Dereference the pointer to get the reference
 }
 
 // void ChunkManager::Update(environment_structure environment) {
@@ -101,6 +130,25 @@ void ChunkManager::WireRender(const environment_structure &environment)
 Int3::Int3(int x, int y, int z) : x(x), y(y), z(z) {}
 
 Int3::Int3(vec3 position) : x(position.x), y(position.y), z(position.z) {}
+
+Int3 Int3::neighboor(Directions dir)
+{
+  switch (dir)
+  {
+  case Up:
+    return Int3(x, y, z + 1);
+  case Down:
+    return Int3(x, y, z - 1);
+  case Front:
+    return Int3(x + 1, y, z);
+  case Back:
+    return Int3(x - 1, y, z);
+  case Left:
+    return Int3(x, y + 1, z);
+  case Right:
+    return Int3(x, y - 1, z);
+  }
+}
 
 bool Int3::operator==(const Int3 &other) const
 {

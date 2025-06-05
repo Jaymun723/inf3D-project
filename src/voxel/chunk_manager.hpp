@@ -22,6 +22,8 @@ struct Int3
   Int3(int x, int y, int z);
   Int3(vec3 position);
 
+  Int3 neighboor(Directions dir);
+
   bool operator==(const Int3 &other) const;
 };
 
@@ -35,12 +37,12 @@ class ChunkManager
 public:
   ChunkManager();
 
-  // void Update(vec3environment_structure environment);
+  void Update(vec3 player_position);
 
   int AddChunk(vec3 position);
-  // Chunk &GetChunk(int id);
-  // Chunk &GetChunk(int id, Directions neigh);
-  // Chunk &GetChunk(vec3 position);
+  Chunk &GetChunk(int id);
+  Chunk &GetChunk(int id, Directions neigh);
+  Chunk &GetChunk(Int3 position);
 
   void Render(const environment_structure &environment);
   void WireRender(const environment_structure &environment);
