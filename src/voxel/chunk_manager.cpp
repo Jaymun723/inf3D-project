@@ -1,7 +1,9 @@
 #include "chunk_manager.hpp"
 #include <functional>
+#include <iostream>
 
-std::size_t Int3Hasher::operator()(const Int3 &k) const {
+std::size_t Int3Hasher::operator()(const Int3 &k) const
+{
   std::size_t h1 = std::hash<int>()(k.x);
   std::size_t h2 = std::hash<int>()(k.y);
   std::size_t h3 = std::hash<int>()(k.z);
@@ -9,20 +11,22 @@ std::size_t Int3Hasher::operator()(const Int3 &k) const {
   return h1 ^ (h2 << 1) ^ (h3 << 2);
 }
 
-ChunkManager::ChunkManager() {
+ChunkManager::ChunkManager()
+{
   // std::cout << "Hello from ChunkManager constructor !" << std::endl;
 }
 
-int ChunkManager::AddChunk(vec3 position) {
-  Chunk chunk = Chunk();
+int ChunkManager::AddChunk(vec3 position)
+{
+  // Construct Chunk directly in the vector
+  m_chunks.emplace_back(position);
+
+  Chunk &chunk = m_chunks.back(); // Reference to the chunk just added
 
   chunk.FullChunk();
   chunk.Load();
 
-  // chunk.m_position = position;
-
-  m_chunks.push_back(chunk);
-  // m_chunk_map[Int3(position)] = &chunk;
+  m_chunk_map[Int3(position)] = &chunk;
 
   return m_chunks.size() - 1;
 }
@@ -32,14 +36,21 @@ int ChunkManager::AddChunk(vec3 position) {
 //   UpdateUnloadList();
 // }
 
-void ChunkManager::Render(environment_structure environment) {
-  for (Chunk &chunk : m_chunks) {
+void ChunkManager::Render(const environment_structure &environment)
+{
+  for (Chunk &chunk : m_chunks)
+  {
+    // std::cout << "Rendering chunk from manager" << std::endl;
+    // std::cout << chunk.m_should_render << std::endl;
+    // std::cout << chunk.m_active_blocks << std::endl;
     chunk.Render(environment);
   }
 }
 
-void ChunkManager::WireRender(environment_structure environment) {
-  for (Chunk &chunk : m_chunks) {
+void ChunkManager::WireRender(const environment_structure &environment)
+{
+  for (Chunk &chunk : m_chunks)
+  {
     chunk.WireRender(environment);
   }
 }
@@ -91,6 +102,7 @@ Int3::Int3(int x, int y, int z) : x(x), y(y), z(z) {}
 
 Int3::Int3(vec3 position) : x(position.x), y(position.y), z(position.z) {}
 
-bool Int3::operator==(const Int3 &other) const {
+bool Int3::operator==(const Int3 &other) const
+{
   return x == other.x && y == other.y && z == other.z;
 }

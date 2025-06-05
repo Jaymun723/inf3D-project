@@ -3,7 +3,8 @@
 #include "chunk.hpp"
 #include <unordered_map>
 
-enum Directions {
+enum Directions
+{
   Up,    //  0,  0,  1
   Down,  //  0,  0, -1
   Front, //  1,  0,  0
@@ -12,7 +13,8 @@ enum Directions {
   Right  //  0, -1,  0
 };
 
-struct Int3 {
+struct Int3
+{
   int x;
   int y;
   int z;
@@ -23,23 +25,25 @@ struct Int3 {
   bool operator==(const Int3 &other) const;
 };
 
-struct Int3Hasher {
+struct Int3Hasher
+{
   std::size_t operator()(const Int3 &k) const;
 };
 
-class ChunkManager {
+class ChunkManager
+{
 public:
   ChunkManager();
 
-  // void Update(environment_structure environment);
+  // void Update(vec3environment_structure environment);
 
   int AddChunk(vec3 position);
   // Chunk &GetChunk(int id);
   // Chunk &GetChunk(int id, Directions neigh);
   // Chunk &GetChunk(vec3 position);
 
-  void Render(environment_structure environment);
-  void WireRender(environment_structure environment);
+  void Render(const environment_structure &environment);
+  void WireRender(const environment_structure &environment);
 
 private:
   std::vector<Chunk> m_chunks;

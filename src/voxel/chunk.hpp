@@ -4,13 +4,15 @@
 #include "block.hpp"
 #include "cgp/cgp.hpp"
 
-class Chunk {
+class Chunk
+{
 public:
   Chunk();
+  Chunk(vec3 position);
   ~Chunk();
 
-  void Render(environment_structure environment);
-  void WireRender(environment_structure environment);
+  void Render(const environment_structure &environment);
+  void WireRender(const environment_structure &environment);
   void FullChunk();
   void HalfChunk();
   void RandomChunk(float density);
