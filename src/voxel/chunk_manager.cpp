@@ -2,15 +2,6 @@
 #include <functional>
 #include <iostream>
 
-std::size_t Int3Hasher::operator()(const Int3 &k) const
-{
-  std::size_t h1 = std::hash<int>()(k.x);
-  std::size_t h2 = std::hash<int>()(k.y);
-  std::size_t h3 = std::hash<int>()(k.z);
-  // Combine hashes (this is a basic technique, better ones exist)
-  return h1 ^ (h2 << 1) ^ (h3 << 2);
-}
-
 ChunkManager::ChunkManager()
 {
   // std::cout << "Hello from ChunkManager constructor !" << std::endl;
@@ -126,31 +117,3 @@ void ChunkManager::WireRender(const environment_structure &environment)
 //     }
 //   }
 // }
-
-Int3::Int3(int x, int y, int z) : x(x), y(y), z(z) {}
-
-Int3::Int3(vec3 position) : x(position.x), y(position.y), z(position.z) {}
-
-Int3 Int3::neighboor(Directions dir)
-{
-  switch (dir)
-  {
-  case Up:
-    return Int3(x, y, z + 1);
-  case Down:
-    return Int3(x, y, z - 1);
-  case Front:
-    return Int3(x + 1, y, z);
-  case Back:
-    return Int3(x - 1, y, z);
-  case Left:
-    return Int3(x, y + 1, z);
-  case Right:
-    return Int3(x, y - 1, z);
-  }
-}
-
-bool Int3::operator==(const Int3 &other) const
-{
-  return x == other.x && y == other.y && z == other.z;
-}
