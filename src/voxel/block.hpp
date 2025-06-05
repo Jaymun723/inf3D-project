@@ -16,7 +16,16 @@ enum BlockType
 	BlockType_Rainbow,
 	BlockType_Water,
 	BlockType_Plank_Tmp,
-	BlockType_Plank
+	BlockType_Plank,
+	BlockType_Flat_Roof,
+	BlockType_Road_Tmp,
+	BlockType_Road,
+	BlockType_White_Line_Tmp,
+	BlockType_White_Line,
+	BlockType_Sidewalk,
+	BlockType_Black,
+	BlockType_Grey,
+	BlockType_White
 };
 
 class Block

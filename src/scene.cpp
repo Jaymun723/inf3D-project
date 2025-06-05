@@ -4,6 +4,9 @@
 #include "markov/structures/snake.hpp"
 #include "markov/structures/river.hpp"
 #include "markov/structures/house.hpp"
+#include "markov/structures/road.hpp"
+#include "markov/structures/crossroads.hpp"
+#include "markov/structures/maze_growth.hpp"
 #include "voxel/block.hpp"
 using namespace cgp;
 
@@ -36,7 +39,10 @@ void scene_structure::display_frame() {
       // build_snake_step = build_snake(chunk, build_snake_step, 1);
       // build_tree_step = build_tree(chunk, build_tree_step, 1);
       // build_river_step = build_river(chunk, build_river_step, 1);
-      build_house_step = build_house(chunk, build_house_step, 5);
+      // build_house_step = build_house(chunk, build_house_step, 5);
+	  // build_Xroad_step = build_Xroad(chunk, build_Xroad_step, 1);
+
+	  build_maze_step = build_maze(chunk, build_maze_step, 1);
   }
   
 

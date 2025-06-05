@@ -123,6 +123,41 @@ void BuildRoofRule::apply(Chunk &C, const vec3 &pos) const
 
 ExtendedMR BuildRoof = ExtendedMR({std::make_shared<BuildRoofRule>()});
 
+bool BuildFlatRoofRule::applies_to(const Chunk &C, const vec3 &pos) const
+{
+	if (pos.z >= C.CHUNK_SIZE - 1)
+	{
+		return C.m_pBlocks[(int)pos.x][(int)pos.y][(int)pos.z].block_type != BlockType_Empty; // Don't build a roof if we are at the top of the chunk
+	}
+	if (C.m_pBlocks[(int)pos.x][(int)pos.y][(int)pos.z + 1].block_type != BlockType_Empty)
+	{
+		return false;
+	}
+
+	vec3 directions[4] = {vec3(1, 0, 0), vec3(-1, 0, 0), vec3(0, 1, 0), vec3(0, -1, 0)};
+	int count = 0;
+	for (const vec3 &dir : directions)
+	{
+		vec3 new_pos = pos + dir;
+		if (new_pos.x < 0 || new_pos.x >= C.CHUNK_SIZE || new_pos.y < 0 || new_pos.y >= C.CHUNK_SIZE || new_pos.z < 0 || new_pos.z >= C.CHUNK_SIZE)
+		{
+			continue;
+		}
+		if (C.m_pBlocks[(int)new_pos.x][(int)new_pos.y][(int)new_pos.z].block_type == BlockType_Plank_Tmp || C.m_pBlocks[(int)new_pos.x][(int)new_pos.y][(int)new_pos.z].block_type == BlockType_Plank)
+		{
+			++count;
+		}
+	}
+	return count >= 2;
+}
+
+void BuildFlatRoofRule::apply(Chunk &C, const vec3 &pos) const
+{
+	C.m_pBlocks[(int)pos.x][(int)pos.y][(int)pos.z].block_type = BlockType_Flat_Roof; // Set the current block to Plank
+}
+
+ExtendedMR BuildFlatRoof = ExtendedMR({std::make_shared<BuildFlatRoofRule>()});
+
 bool MakeExtDefRule::applies_to(const Chunk &C, const vec3 &pos) const
 {
 	if (C.m_pBlocks[(int)pos.x][(int)pos.y][(int)pos.z].block_type != BlockType_Plank_Tmp)
@@ -166,6 +201,49 @@ void RemovePlankTmpRule::apply(Chunk &C, const vec3 &pos) const
 }
 
 ExtendedMR RemovePlankTmp = ExtendedMR({std::make_shared<RemovePlankTmpRule>()});
+
+bool AppearNewGroundRule::applies_to(const Chunk &C, const vec3 &pos) const
+{
+	return (C.m_pBlocks[(int)pos.x][(int)pos.y][(int)pos.z].block_type == BlockType_Flat_Roof);
+}
+
+void AppearNewGroundRule::apply(Chunk &C, const vec3 &pos) const
+{
+	int x = pos.x;
+	int y = pos.y;
+	int z = pos.z;																				 // Place the new ground block above the flat roof
+	C.m_pBlocks[x][y][z].block_type = BlockType_Plank_Tmp; // Change the flat roof to temporary grass
+}
+
+ExtendedMR AppearNewGround = ExtendedMR({std::make_shared<AppearNewGroundRule>()});
+
+bool CleanSingleBlocksRule::applies_to(const Chunk &C, const vec3 &pos) const
+{
+	vec3 directions[4] = {vec3(1, 0, 0), vec3(-1, 0, 0), vec3(0, 1, 0), vec3(0, -1, 0)};
+	for (const vec3 &dir : directions)
+	{
+		vec3 new_pos = pos + dir;
+		if (new_pos.x < 0 || new_pos.x >= C.CHUNK_SIZE || new_pos.y < 0 || new_pos.y >= C.CHUNK_SIZE || new_pos.z < 0 || new_pos.z >= C.CHUNK_SIZE)
+		{
+			continue;
+		}
+		if (C.m_pBlocks[(int)new_pos.x][(int)new_pos.y][(int)new_pos.z].block_type != BlockType_Empty)
+		{
+			return false; // If any adjacent block is not empty, don't clean
+		}
+	}
+	return true;
+}
+
+void CleanSingleBlocksRule::apply(Chunk &C, const vec3 &pos) const
+{
+	int x = pos.x;
+	int y = pos.y;
+	int z = pos.z;
+	C.m_pBlocks[x][y][z].block_type = BlockType_Empty; // Set the current block to empty
+}
+
+ExtendedMR CleanSingleBlocks = ExtendedMR({std::make_shared<CleanSingleBlocksRule>()});
 
 int build_house_aux(Chunk &C, int step)
 {
@@ -218,11 +296,11 @@ int build_house_aux(Chunk &C, int step)
 		{
 			if (rand() % 4 == 0)
 			{
-				step = 6;
+				step = 7;
 			}
 			break;
 		}
-		step = 6;
+		step = 7;
 		break;
 
 	case 6:
@@ -230,24 +308,50 @@ int build_house_aux(Chunk &C, int step)
 		{
 			break;
 		}
-		step = 7;
+		step = 8;
 		break;
 
 	case 7:
-		std::cout << "Step 7" << std::endl;
+		if (BuildFlatRoof.applyRule(C, -1))
+		{
+			step = 8;
+			break;
+		}
+
+	case 8:
 		if (MakeExtDef.applyRule(C, -1))
 		{
 			break;
 		}
-		step = 8;
+		step = 9;
 		break;
 
-	case 8:
+	case 9:
 		if (RemovePlankTmp.applyRule(C, -1))
 		{
 			break;
 		}
-		step = 9;
+		step = 10;
+		break;
+
+	case 10:
+		if (rand() % 6 == 0)
+		{
+			step = 11;
+		}
+		else
+		{
+			AppearNewGround.applyRule(C, 1);
+			step = 3;
+		}
+		break;
+
+	case 11:
+		if (CleanSingleBlocks.applyRule(C, -1))
+		{
+			break;
+		}
+		step = 12;
 		break;
 
 	default:
