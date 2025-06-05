@@ -39,9 +39,10 @@ public:
 
 private: // The blocks data
   void CreateMesh();
+  void AddQuadToMesh(cgp::mesh &chunk_mesh, const cgp::vec3 &block_position, Directions face_direction, const cgp::vec3 &color);
+  cgp::vec3 CalculateNormal(Directions face_direction);
+
   bool m_loaded = false;
   int m_active_blocks = 0;
-
-  // cgp::mesh chunk_mesh;
   cgp::mesh_drawable m_chunk_drawable_mesh;
 };

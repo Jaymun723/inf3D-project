@@ -75,25 +75,50 @@ void Chunk::CreateMesh()
     {
       for (int z = 0; z < BLOCK_CHUNK_SIZE.z; z++)
       {
-        Block pBlock = m_pBlocks[x][y][z];
-        if (pBlock.block_type != BlockType_Empty)
+        Block &current_block = m_pBlocks[x][y][z];
+        if (current_block.block_type != BlockType_Empty)
         {
           m_active_blocks++;
-          vec3 offset = vec3(0.5, 0.5, 0.5);
+          vec3 block_position = vec3(x, y, z);
+          vec3 block_color = current_block.getColor();
 
-          vec3 center = offset + vec3(x, y, z);
+          // Check each face and only add if it's visible (not occluded by adjacent block)
 
-          mesh cube = mesh_primitive_cube(center,
-                                          1);
-
-          // std::cout << "Cube with " << center << std::endl;
-
-          for (vec3 &color : cube.color)
+          // Front face (+X direction)
+          if (x == BLOCK_CHUNK_SIZE.x - 1 || m_pBlocks[x + 1][y][z].block_type == BlockType_Empty)
           {
-            color = pBlock.getColor();
+            AddQuadToMesh(chunk_mesh, block_position, Front, block_color);
           }
 
-          chunk_mesh.push_back(cube);
+          // Back face (-X direction)
+          if (x == 0 || m_pBlocks[x - 1][y][z].block_type == BlockType_Empty)
+          {
+            AddQuadToMesh(chunk_mesh, block_position, Back, block_color);
+          }
+
+          // Right face (+Y direction)
+          if (y == BLOCK_CHUNK_SIZE.y - 1 || m_pBlocks[x][y + 1][z].block_type == BlockType_Empty)
+          {
+            AddQuadToMesh(chunk_mesh, block_position, Right, block_color);
+          }
+
+          // Left face (-Y direction)
+          if (y == 0 || m_pBlocks[x][y - 1][z].block_type == BlockType_Empty)
+          {
+            AddQuadToMesh(chunk_mesh, block_position, Left, block_color);
+          }
+
+          // Top face (+Z direction)
+          if (z == BLOCK_CHUNK_SIZE.z - 1 || m_pBlocks[x][y][z + 1].block_type == BlockType_Empty)
+          {
+            AddQuadToMesh(chunk_mesh, block_position, Up, block_color);
+          }
+
+          // Bottom face (-Z direction)
+          if (z == 0 || m_pBlocks[x][y][z - 1].block_type == BlockType_Empty)
+          {
+            AddQuadToMesh(chunk_mesh, block_position, Down, block_color);
+          }
         }
       }
     }
@@ -101,7 +126,104 @@ void Chunk::CreateMesh()
 
   if (m_active_blocks > 0)
   {
+    chunk_mesh.fill_empty_field();
     m_chunk_drawable_mesh.initialize_data_on_gpu(chunk_mesh);
+  }
+}
+
+// Helper method to add a single quad face to the mesh
+void Chunk::AddQuadToMesh(mesh &chunk_mesh, const vec3 &block_position, Directions face_direction, const vec3 &color)
+{
+  vec3 center = block_position + vec3(0.5f, 0.5f, 0.5f);
+
+  // Define the 4 vertices of the quad based on face direction
+  std::vector<vec3> vertices(4);
+
+  switch (face_direction)
+  {
+  case Front:                                        // +X face
+    vertices[0] = center + vec3(0.5f, -0.5f, -0.5f); // bottom-left
+    vertices[1] = center + vec3(0.5f, 0.5f, -0.5f);  // bottom-right
+    vertices[2] = center + vec3(0.5f, 0.5f, 0.5f);   // top-right
+    vertices[3] = center + vec3(0.5f, -0.5f, 0.5f);  // top-left
+    break;
+
+  case Back:                                          // -X face
+    vertices[0] = center + vec3(-0.5f, 0.5f, -0.5f);  // bottom-left
+    vertices[1] = center + vec3(-0.5f, -0.5f, -0.5f); // bottom-right
+    vertices[2] = center + vec3(-0.5f, -0.5f, 0.5f);  // top-right
+    vertices[3] = center + vec3(-0.5f, 0.5f, 0.5f);   // top-left
+    break;
+
+  case Right:                                        // +Y face
+    vertices[0] = center + vec3(0.5f, 0.5f, -0.5f);  // bottom-left
+    vertices[1] = center + vec3(-0.5f, 0.5f, -0.5f); // bottom-right
+    vertices[2] = center + vec3(-0.5f, 0.5f, 0.5f);  // top-right
+    vertices[3] = center + vec3(0.5f, 0.5f, 0.5f);   // top-left
+    break;
+
+  case Left:                                          // -Y face
+    vertices[0] = center + vec3(-0.5f, -0.5f, -0.5f); // bottom-left
+    vertices[1] = center + vec3(0.5f, -0.5f, -0.5f);  // bottom-right
+    vertices[2] = center + vec3(0.5f, -0.5f, 0.5f);   // top-right
+    vertices[3] = center + vec3(-0.5f, -0.5f, 0.5f);  // top-left
+    break;
+
+  case Up:                                           // +Z face
+    vertices[0] = center + vec3(-0.5f, -0.5f, 0.5f); // bottom-left
+    vertices[1] = center + vec3(0.5f, -0.5f, 0.5f);  // bottom-right
+    vertices[2] = center + vec3(0.5f, 0.5f, 0.5f);   // top-right
+    vertices[3] = center + vec3(-0.5f, 0.5f, 0.5f);  // top-left
+    break;
+
+  case Down:                                          // -Z face
+    vertices[0] = center + vec3(-0.5f, 0.5f, -0.5f);  // bottom-left
+    vertices[1] = center + vec3(0.5f, 0.5f, -0.5f);   // bottom-right
+    vertices[2] = center + vec3(0.5f, -0.5f, -0.5f);  // top-right
+    vertices[3] = center + vec3(-0.5f, -0.5f, -0.5f); // top-left
+    break;
+  }
+
+  // Calculate normal for the face
+  vec3 normal = CalculateNormal(face_direction);
+
+  // Add the quad as two triangles (0-1-2 and 0-2-3)
+  size_t base_index = chunk_mesh.position.size();
+
+  // Add vertices
+  for (const vec3 &vertex : vertices)
+  {
+    chunk_mesh.position.push_back(vertex);
+    chunk_mesh.color.push_back(color);
+    chunk_mesh.normal.push_back(normal);
+  }
+
+  // Add triangle indices for the quad (two triangles)
+  // Triangle 1: 0-1-2
+  chunk_mesh.connectivity.push_back(uint3(base_index, base_index + 1, base_index + 2));
+  // Triangle 2: 0-2-3
+  chunk_mesh.connectivity.push_back(uint3(base_index, base_index + 2, base_index + 3));
+}
+
+// Helper method to calculate face normal
+vec3 Chunk::CalculateNormal(Directions face_direction)
+{
+  switch (face_direction)
+  {
+  case Front:
+    return vec3(1.0f, 0.0f, 0.0f);
+  case Back:
+    return vec3(-1.0f, 0.0f, 0.0f);
+  case Right:
+    return vec3(0.0f, 1.0f, 0.0f);
+  case Left:
+    return vec3(0.0f, -1.0f, 0.0f);
+  case Up:
+    return vec3(0.0f, 0.0f, 1.0f);
+  case Down:
+    return vec3(0.0f, 0.0f, -1.0f);
+  default:
+    return vec3(0.0f, 0.0f, 1.0f);
   }
 }
 
