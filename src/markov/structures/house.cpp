@@ -125,7 +125,7 @@ ExtendedMR BuildRoof = ExtendedMR({std::make_shared<BuildRoofRule>()});
 
 bool BuildFlatRoofRule::applies_to(const Chunk &C, const vec3 &pos) const
 {
-	if (pos.z >= C.CHUNK_SIZE - 1)
+	if (pos.z >= C.BLOCK_CHUNK_SIZE.z - 1)
 	{
 		return C.m_pBlocks[(int)pos.x][(int)pos.y][(int)pos.z].block_type != BlockType_Empty; // Don't build a roof if we are at the top of the chunk
 	}
@@ -139,7 +139,7 @@ bool BuildFlatRoofRule::applies_to(const Chunk &C, const vec3 &pos) const
 	for (const vec3 &dir : directions)
 	{
 		vec3 new_pos = pos + dir;
-		if (new_pos.x < 0 || new_pos.x >= C.CHUNK_SIZE || new_pos.y < 0 || new_pos.y >= C.CHUNK_SIZE || new_pos.z < 0 || new_pos.z >= C.CHUNK_SIZE)
+		if (new_pos.x < 0 || new_pos.x >= C.BLOCK_CHUNK_SIZE.x || new_pos.y < 0 || new_pos.y >= C.BLOCK_CHUNK_SIZE.y || new_pos.z < 0 || new_pos.z >= C.BLOCK_CHUNK_SIZE.z)
 		{
 			continue;
 		}
@@ -223,7 +223,7 @@ bool CleanSingleBlocksRule::applies_to(const Chunk &C, const vec3 &pos) const
 	for (const vec3 &dir : directions)
 	{
 		vec3 new_pos = pos + dir;
-		if (new_pos.x < 0 || new_pos.x >= C.CHUNK_SIZE || new_pos.y < 0 || new_pos.y >= C.CHUNK_SIZE || new_pos.z < 0 || new_pos.z >= C.CHUNK_SIZE)
+		if (new_pos.x < 0 || new_pos.x >= C.BLOCK_CHUNK_SIZE.x || new_pos.y < 0 || new_pos.y >= C.BLOCK_CHUNK_SIZE.y || new_pos.z < 0 || new_pos.z >= C.BLOCK_CHUNK_SIZE.z)
 		{
 			continue;
 		}
