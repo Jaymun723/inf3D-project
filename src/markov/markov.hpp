@@ -8,6 +8,10 @@
 
 using namespace cgp;
 
+
+std::vector<int> generate_random_indices(int size, int count);
+
+
 class BasicMR {
 public:
   std::vector<BasicR> rules;

@@ -54,6 +54,7 @@ struct scene_structure : cgp::scene_inputs_generic {
   int build_house_step = 0;
   int build_Xroad_step = 0;
   int build_crossroads_step = 0;
+  int build_maze_step = 0;
 
   // ****************************** //
   // Functions

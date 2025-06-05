@@ -59,6 +59,15 @@ vec3 Block::getColor() {
   case BlockType_Sidewalk:
 	  return vec3(0.8f, 0.8f, 0.8f);
 
+  case BlockType_Black:
+	  return vec3(0, 0, 0);
+
+  case BlockType_Grey:
+	  return vec3(0.5f, 0.5f, 0.5f);
+
+  case BlockType_White:
+	  return vec3(1, 1, 1);
+
   case BlockType_Empty:
   default:
     return vec3(0, 0, 0);

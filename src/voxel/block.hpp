@@ -21,7 +21,10 @@ enum BlockType {
 	BlockType_Road,
 	BlockType_White_Line_Tmp,
 	BlockType_White_Line,
-	BlockType_Sidewalk};
+	BlockType_Sidewalk,
+	BlockType_Black,
+	BlockType_Grey,
+	BlockType_White};
 
 class Block {
   /**
