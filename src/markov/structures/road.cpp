@@ -1,7 +1,7 @@
 #include "road.hpp"
 
 
-bool BuildBasicXRoadRule::applies_to(const Chunk& C, const vec3& pos) const {
+bool BuildBasicRoadRule::applies_to(const Chunk& C, const vec3& pos) const {
 	if (pos.x == 0 || C.m_pBlocks[(int)pos.x][(int)pos.y][(int)pos.z].block_type != BlockType_Empty) {
 		return false;
 	}
@@ -9,11 +9,11 @@ bool BuildBasicXRoadRule::applies_to(const Chunk& C, const vec3& pos) const {
 		|| C.m_pBlocks[(int)pos.x - 1][(int)pos.y][(int)pos.z].block_type == BlockType_Road);
 }
 
-void BuildBasicXRoadRule::apply(Chunk& C, const vec3& pos) const {
+void BuildBasicRoadRule::apply(Chunk& C, const vec3& pos) const {
 	C.m_pBlocks[(int)pos.x][(int)pos.y][(int)pos.z].block_type = BlockType_Road_Tmp; // Set the current block to Road
 }
 
-ExtendedMR BuildBasicXRoad = ExtendedMR({ std::make_shared<BuildBasicXRoadRule>() });
+ExtendedMR BuildBasicXRoad = ExtendedMR({ std::make_shared<BuildBasicRoadRule>() });
 
 
 bool MakeXSidewalkRule::applies_to(const Chunk& C, const vec3& pos) const {

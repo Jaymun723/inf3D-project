@@ -6,7 +6,7 @@
 using namespace cgp;
 
 
-class BuildBasicXRoadRule : public Rule {
+class BuildBasicRoadRule : public Rule {
 public:
 	bool applies_to(const Chunk& C, const vec3& pos) const override;
 	void apply(Chunk& C, const vec3& pos) const override;

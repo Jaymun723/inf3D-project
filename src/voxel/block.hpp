@@ -16,6 +16,7 @@ enum BlockType {
 	BlockType_Water,
 	BlockType_Plank_Tmp,
 	BlockType_Plank,
+	BlockType_Flat_Roof,
 	BlockType_Road_Tmp,
 	BlockType_Road,
 	BlockType_White_Line_Tmp,
