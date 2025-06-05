@@ -19,7 +19,8 @@ int ChunkManager::AddChunk(vec3 position)
 
   Chunk &chunk = m_chunks.back(); // Reference to the chunk just added
 
-  chunk.FullChunk();
+  // chunk.FullChunk();
+  chunk.HalfChunk();
   chunk.Load();
 
   m_chunk_map[Int3(position)] = &chunk;

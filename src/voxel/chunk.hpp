@@ -3,6 +3,7 @@
 #include "../environment.hpp"
 #include "block.hpp"
 #include "cgp/cgp.hpp"
+#include "int3.hpp"
 
 class Chunk
 {
@@ -27,7 +28,11 @@ public:
 
   cgp::vec3 m_position;
 
-  static const int CHUNK_SIZE = 16;
+  // How many blocks in each direction
+  static const Int3 BLOCK_CHUNK_SIZE;
+  // How many units to render the chunk in each direction
+  static const Int3 RENDER_CHUNK_SIZE;
+
   Block ***m_pBlocks;
 
 private: // The blocks data

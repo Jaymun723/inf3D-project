@@ -3,18 +3,22 @@
 
 using namespace cgp;
 
+const Int3 Chunk::BLOCK_CHUNK_SIZE = Int3(32, 32, 32);
+
+const Int3 Chunk::RENDER_CHUNK_SIZE = Int3(2, 2, 2);
+
 Chunk::Chunk()
 { // Create the blocks
   m_loaded = false;
   m_should_render = false;
 
-  m_pBlocks = new Block **[CHUNK_SIZE];
-  for (int i = 0; i < CHUNK_SIZE; i++)
+  m_pBlocks = new Block **[BLOCK_CHUNK_SIZE.x];
+  for (int i = 0; i < BLOCK_CHUNK_SIZE.x; i++)
   {
-    m_pBlocks[i] = new Block *[CHUNK_SIZE];
-    for (int j = 0; j < CHUNK_SIZE; j++)
+    m_pBlocks[i] = new Block *[BLOCK_CHUNK_SIZE.y];
+    for (int j = 0; j < BLOCK_CHUNK_SIZE.y; j++)
     {
-      m_pBlocks[i][j] = new Block[CHUNK_SIZE];
+      m_pBlocks[i][j] = new Block[BLOCK_CHUNK_SIZE.z];
     }
   }
 }
@@ -41,9 +45,9 @@ Chunk::~Chunk()
   std::cout << "Deconstructor called on Chunk" << std::endl;
   m_chunk_drawable_mesh.clear();
 
-  for (int i = 0; i < CHUNK_SIZE; ++i)
+  for (int i = 0; i < BLOCK_CHUNK_SIZE.x; ++i)
   {
-    for (int j = 0; j < CHUNK_SIZE; ++j)
+    for (int j = 0; j < BLOCK_CHUNK_SIZE.y; ++j)
     {
       delete[] m_pBlocks[i][j];
     }
@@ -58,22 +62,22 @@ void Chunk::CreateMesh()
   mesh chunk_mesh;
   m_active_blocks = 0;
 
-  for (int x = 0; x < CHUNK_SIZE; x++)
+  for (int x = 0; x < BLOCK_CHUNK_SIZE.x; x++)
   {
-    for (int y = 0; y < CHUNK_SIZE; y++)
+    for (int y = 0; y < BLOCK_CHUNK_SIZE.y; y++)
     {
-      for (int z = 0; z < CHUNK_SIZE; z++)
+      for (int z = 0; z < BLOCK_CHUNK_SIZE.z; z++)
       {
         Block pBlock = m_pBlocks[x][y][z];
         if (pBlock.block_type != BlockType_Empty)
         {
           m_active_blocks++;
-          vec3 offset = Block::BLOCK_RENDER_SIZE * vec3(0.5, 0.5, 0.5);
+          vec3 offset = vec3(0.5, 0.5, 0.5);
 
-          vec3 center = offset + Block::BLOCK_RENDER_SIZE * vec3(x, y, z);
+          vec3 center = offset + vec3(x, y, z);
 
           mesh cube = mesh_primitive_cube(center,
-                                          Block::BLOCK_RENDER_SIZE);
+                                          1);
 
           // std::cout << "Cube with " << center << std::endl;
 
@@ -96,11 +100,11 @@ void Chunk::CreateMesh()
 
 void Chunk::FullChunk()
 {
-  for (int x = 0; x < CHUNK_SIZE; x++)
+  for (int x = 0; x < BLOCK_CHUNK_SIZE.x; x++)
   {
-    for (int y = 0; y < CHUNK_SIZE; y++)
+    for (int y = 0; y < BLOCK_CHUNK_SIZE.y; y++)
     {
-      for (int z = 0; z < CHUNK_SIZE; z++)
+      for (int z = 0; z < BLOCK_CHUNK_SIZE.z; z++)
       {
         m_pBlocks[x][y][z].block_type = BlockType_Default;
       }
@@ -110,9 +114,9 @@ void Chunk::FullChunk()
 
 void Chunk::HalfChunk()
 {
-  for (int x = 0; x < CHUNK_SIZE; x++)
+  for (int x = 0; x < BLOCK_CHUNK_SIZE.x; x++)
   {
-    for (int y = 0; y < CHUNK_SIZE; y++)
+    for (int y = 0; y < BLOCK_CHUNK_SIZE.y; y++)
     {
       for (int z = 0; z < (x + y) / 2; z++)
       {
@@ -124,11 +128,11 @@ void Chunk::HalfChunk()
 
 void Chunk::RandomChunk(float density)
 {
-  for (int x = 0; x < CHUNK_SIZE; x++)
+  for (int x = 0; x < BLOCK_CHUNK_SIZE.x; x++)
   {
-    for (int y = 0; y < CHUNK_SIZE; y++)
+    for (int y = 0; y < BLOCK_CHUNK_SIZE.y; y++)
     {
-      for (int z = 0; z < CHUNK_SIZE; z++)
+      for (int z = 0; z < BLOCK_CHUNK_SIZE.z; z++)
       {
         if (static_cast<float>(rand()) / RAND_MAX < density)
         {

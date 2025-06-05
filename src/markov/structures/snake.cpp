@@ -1,21 +1,26 @@
 #include "snake.hpp"
 
-bool AppearOnHeadRule::applies_to(const Chunk& C, const vec3& pos) const {
+bool AppearOnHeadRule::applies_to(const Chunk &C, const vec3 &pos) const
+{
     int x = pos.x;
     int y = pos.y;
     int z = pos.z;
-    if (C.m_pBlocks[x][y][z].block_type == BlockType_Head) {
-        vec3 directions[6] = { vec3(1, 0, 0),  vec3(-1, 0, 0), vec3(0, 1, 0),
-                              vec3(0, -1, 0), vec3(0, 0, 1),  vec3(0, 0, -1) };
-        for (const vec3& dir : directions) {
+    if (C.m_pBlocks[x][y][z].block_type == BlockType_Head)
+    {
+        vec3 directions[6] = {vec3(1, 0, 0), vec3(-1, 0, 0), vec3(0, 1, 0),
+                              vec3(0, -1, 0), vec3(0, 0, 1), vec3(0, 0, -1)};
+        for (const vec3 &dir : directions)
+        {
             vec3 new_pos = pos + dir;
-            if (new_pos.x < 0 || new_pos.x >= C.CHUNK_SIZE || new_pos.y < 0 ||
-                new_pos.y >= C.CHUNK_SIZE || new_pos.z < 0 ||
-                new_pos.z >= C.CHUNK_SIZE) {
+            if (new_pos.x < 0 || new_pos.x >= C.BLOCK_CHUNK_SIZE.x || new_pos.y < 0 ||
+                new_pos.y >= C.BLOCK_CHUNK_SIZE.y || new_pos.z < 0 ||
+                new_pos.z >= C.BLOCK_CHUNK_SIZE.z)
+            {
                 continue; // Out of bounds
             }
             if (C.m_pBlocks[(int)new_pos.x][(int)new_pos.y][(int)new_pos.z]
-                .block_type == BlockType_Empty) {
+                    .block_type == BlockType_Empty)
+            {
                 return true; // Found an empty block adjacent to the head
             }
         }
@@ -23,28 +28,33 @@ bool AppearOnHeadRule::applies_to(const Chunk& C, const vec3& pos) const {
     return false;
 }
 
-void AppearOnHeadRule::apply(Chunk& C, const vec3& pos) const {
+void AppearOnHeadRule::apply(Chunk &C, const vec3 &pos) const
+{
     // std::cout << "Applying AppearOnHeadRule at position: " << pos << std::endl;
     int MAX_TRIES = 10;
     int x = pos.x;
     int y = pos.y;
     int z = pos.z;
     int random_idx = rand() % 6; // Randomly choose one of the 6 directions
-    for (int i = 0; i < MAX_TRIES; ++i) {
-        vec3 directions[6] = { vec3(1, 0, 0),  vec3(-1, 0, 0), vec3(0, 1, 0),
-                              vec3(0, -1, 0), vec3(0, 0, 1),  vec3(0, 0, -1) };
+    for (int i = 0; i < MAX_TRIES; ++i)
+    {
+        vec3 directions[6] = {vec3(1, 0, 0), vec3(-1, 0, 0), vec3(0, 1, 0),
+                              vec3(0, -1, 0), vec3(0, 0, 1), vec3(0, 0, -1)};
         vec3 new_pos = pos + directions[random_idx];
-        if (new_pos.x < 0 || new_pos.x >= C.CHUNK_SIZE || new_pos.y < 0 ||
-            new_pos.y >= C.CHUNK_SIZE || new_pos.z < 0 ||
-            new_pos.z >= C.CHUNK_SIZE) {
+        if (new_pos.x < 0 || new_pos.x >= C.BLOCK_CHUNK_SIZE.x || new_pos.y < 0 ||
+            new_pos.y >= C.BLOCK_CHUNK_SIZE.y || new_pos.z < 0 ||
+            new_pos.z >= C.BLOCK_CHUNK_SIZE.z)
+        {
             continue;
         }
         C.m_pBlocks[x][y][z].block_type =
             BlockType_Rainbow; // Set the current block to Default
-        if (rand() % 100 > 0) {
+        if (rand() % 100 > 0)
+        {
             C.m_pBlocks[(int)new_pos.x][(int)new_pos.y][(int)new_pos.z].block_type = BlockType_Head;
         }
-        else {
+        else
+        {
             C.m_pBlocks[(int)new_pos.x][(int)new_pos.y][(int)new_pos.z].block_type = BlockType_Rainbow;
         }
 
@@ -52,21 +62,24 @@ void AppearOnHeadRule::apply(Chunk& C, const vec3& pos) const {
     }
 }
 
-ExtendedMR AppearOnHead = ExtendedMR({ std::make_shared<AppearOnHeadRule>() });
+ExtendedMR AppearOnHead = ExtendedMR({std::make_shared<AppearOnHeadRule>()});
 
+int build_snake_aux(Chunk &C, int step)
+{
+    switch (step)
+    {
+    case 0:
+        C.m_pBlocks[rand() % C.BLOCK_CHUNK_SIZE.x][rand() % C.BLOCK_CHUNK_SIZE.y][0].block_type = BlockType_Head;
+        step = 1;
+        break;
 
-int build_snake_aux(Chunk& C, int step) {
-    switch (step) {
-	case 0:
-		C.m_pBlocks[rand()%C.CHUNK_SIZE][rand()%C.CHUNK_SIZE][0].block_type = BlockType_Head;
-		step = 1;
-		break;
-
-	case 1:
-        if (AppearOnHead.applyRule(C, 1)) {
+    case 1:
+        if (AppearOnHead.applyRule(C, 1))
+        {
             break;
         }
-        else {
+        else
+        {
             step = 2;
             break;
         }
@@ -75,13 +88,15 @@ int build_snake_aux(Chunk& C, int step) {
         return step;
     }
 
-	return step;
+    return step;
 }
 
-int build_snake(Chunk& C, int step, int speed) {
-    for (int i = 0; i < speed; ++i) {
-		step = build_snake_aux(C, step);
+int build_snake(Chunk &C, int step, int speed)
+{
+    for (int i = 0; i < speed; ++i)
+    {
+        step = build_snake_aux(C, step);
     }
     C.UpdateMesh();
-	return step;
+    return step;
 }
