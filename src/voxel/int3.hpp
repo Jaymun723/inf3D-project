@@ -19,10 +19,14 @@ struct Int3
   int y;
   int z;
 
+  Int3();
   Int3(int x, int y, int z);
   Int3(vec3 position);
 
-  Int3 neighboor(Directions dir);
+  Int3 Neighboor(Directions dir) const;
+  vec3 ToVec() const;
+
+  float sqared_dist(const Int3 &other) const;
 
   bool operator==(const Int3 &other) const;
 };

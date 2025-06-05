@@ -9,11 +9,15 @@ std::size_t Int3Hasher::operator()(const Int3 &k) const
   return h1 ^ (h2 << 1) ^ (h3 << 2);
 }
 
+Int3::Int3() : x(0), y(0), z(0)
+{
+}
+
 Int3::Int3(int x, int y, int z) : x(x), y(y), z(z) {}
 
 Int3::Int3(vec3 position) : x(position.x), y(position.y), z(position.z) {}
 
-Int3 Int3::neighboor(Directions dir)
+Int3 Int3::Neighboor(Directions dir) const
 {
   switch (dir)
   {
@@ -32,6 +36,16 @@ Int3 Int3::neighboor(Directions dir)
   default:
     return Int3(x, y, z);
   }
+}
+
+vec3 Int3::ToVec() const
+{
+  return vec3(x, y, z);
+}
+
+float Int3::sqared_dist(const Int3 &other) const
+{
+  return (other.x - x) * (other.x - x) + (other.y - y) * (other.y - y) + (other.z - z) * (other.z - z);
 }
 
 bool Int3::operator==(const Int3 &other) const

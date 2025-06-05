@@ -31,6 +31,9 @@ Chunk::Chunk(vec3 position) : Chunk()
 void Chunk::Render(const environment_structure &environment)
 {
   m_chunk_drawable_mesh.model.translation = m_position;
+  m_chunk_drawable_mesh.model.scaling_xyz = {((float)RENDER_CHUNK_SIZE.x) / ((float)BLOCK_CHUNK_SIZE.x),
+                                             ((float)RENDER_CHUNK_SIZE.y) / ((float)BLOCK_CHUNK_SIZE.y),
+                                             ((float)RENDER_CHUNK_SIZE.z) / ((float)BLOCK_CHUNK_SIZE.z)};
   draw(m_chunk_drawable_mesh, environment);
 }
 
