@@ -325,7 +325,9 @@ void Chunk::UnLoad()
 }
 
 
-void Chunk::BuildFunction()
+bool Chunk::BuildFunction()
 {
-	step =  build_river(*this, step, speed);
+    int old_step = step;
+	step = build_river(*this, step, speed);
+    return old_step != step;
 }
