@@ -80,12 +80,17 @@ int build_snake_aux(Chunk &C, int step)
         }
         else
         {
-            step = 2;
+            step = -1;
             break;
         }
 
+    case -1:
+        return -1;
+
     default:
-        return step;
+        std::cout << "Invalid step in build_snake_aux: " << step << std::endl;
+        break;
+
     }
 
     return step;
@@ -97,6 +102,5 @@ int build_snake(Chunk &C, int step, int speed)
     {
         step = build_snake_aux(C, step);
     }
-    C.UpdateMesh();
     return step;
 }

@@ -121,11 +121,15 @@ int build_tree_aux(Chunk &C, int step)
         {
             break;
         }
-        step = 5;
+        step = -1;
         break;
 
+    case -1:
+        return -1;
+
     default:
-        return step;
+        std::cout << "Invalid step in build_tree_aux: " << step << std::endl;
+        break;
     }
     return step;
 }
@@ -136,6 +140,5 @@ int build_tree(Chunk &C, int step, int speed)
     {
         step = build_tree_aux(C, step);
     }
-    C.UpdateMesh();
     return step;
 }

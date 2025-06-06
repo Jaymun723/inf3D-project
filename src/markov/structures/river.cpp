@@ -160,8 +160,8 @@ int build_river_aux(Chunk &C, int step)
 		break;
 
 	case 1:
-		found_normal = BuildGroundGrass.applyRule(C, 1);
-		found_tmp = BuildGroundGrassTmp.applyRule(C, 1);
+		found_normal = BuildGroundGrass.applyRule(C, 5);
+		found_tmp = BuildGroundGrassTmp.applyRule(C, 5);
 		if (found_normal || found_tmp)
 		{
 			break;
@@ -197,11 +197,15 @@ int build_river_aux(Chunk &C, int step)
 		if (RemoveGrassTmp.applyRule(C, 5)) {
 			break;
 		}
-		step = 6;
+		step = -1;
 		break;
 
+	case -1:
+		return -1;
+
 	default:
-		return step;
+		std::cout << "Invalid step in build_river_aux: " << step << std::endl;
+		break;
 	}
 
 	return step;
@@ -213,6 +217,5 @@ int build_river(Chunk &C, int step, int speed)
 	{
 		step = build_river_aux(C, step);
 	}
-	C.UpdateMesh();
 	return step;
 }

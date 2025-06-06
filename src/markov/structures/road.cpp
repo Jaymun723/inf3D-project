@@ -104,12 +104,18 @@ int build_Xroad_aux(Chunk& C, int step) {
 		if (ExtendXWhiteLine.applyRule(C, -1)) {
 			break;
 		}
-		step = 5;
+		step = -1;
 		break;
 
+
+	case -1:
+		return -1;
 
 	default:
+		std::cout << "Invalid step in build_road_aux: " << step << std::endl;
 		break;
+
+
 	}
 
 	return step;
@@ -120,6 +126,5 @@ int build_Xroad(Chunk& C, int step, int speed) {
 	for (int i = 0; i < speed; ++i) {
 		step = build_Xroad_aux(C, step);
 	}
-	C.UpdateMesh();
 	return step;
 }
