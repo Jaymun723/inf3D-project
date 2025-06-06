@@ -16,8 +16,8 @@ void scene_structure::initialize()
   camera_control.initialize(inputs,
                             window); // Give access to the inputs and window
   // global state to the camera controler
-  camera_control.set_rotation_axis_z();
-  camera_control.look_at({0.5f, 0.5f, 0.2f}, {0, 0, 0}, {0, 0, 1});
+  // camera_control.set_rotation_axis_z();
+  // camera_control.look_at({0.5f, 0.5f, 0.2f}, {0, 0, 0}, {0, 0, 1});
   // camera_control.camera_model.position_camera = { 3.0f, 2.0f, 20.0f };
   // camera_control.look_at({0, 0.2, 0}, {1, 0.2, 0});
   // camera_control.set_rotation_axis_z();
@@ -47,6 +47,8 @@ void scene_structure::initialize()
       image_grid[7].mirror_vertical(),                                         // -Y
       image_grid[5].rotate_90_degrees_counterclockwise().mirror_horizontal(),  // +Z
       image_grid[3].rotate_90_degrees_counterclockwise().mirror_horizontal()); // +Z
+
+  car.Initialize(camera_control);
 }
 
 void scene_structure::display_frame()
@@ -69,7 +71,10 @@ void scene_structure::display_frame()
   //   build_house_step = build_house(chunk, build_house_step, 5);
   // }
 
-  manager.Update(camera_control.camera_model.position_camera, frame_count);
+  car.Update(camera_control, dt);
+  car.Render(environment);
+
+  manager.Update(car.m_position, frame_count);
   manager.Render(environment);
 
   if (gui.display_frame)
@@ -85,7 +90,7 @@ void scene_structure::display_frame()
   }
 
   // Update the current time
-  timer.update();
+  dt = timer.update();
 }
 
 void scene_structure::display_gui()
@@ -104,8 +109,9 @@ void scene_structure::mouse_click_event()
 {
   camera_control.action_mouse_click(environment.camera_view);
 }
-void scene_structure::keyboard_event()
+void scene_structure::keyboard_event(int key, int action)
 {
+  car.HandleKeyboard(environment, key, action);
   camera_control.action_keyboard(environment.camera_view);
 }
 void scene_structure::idle_frame()

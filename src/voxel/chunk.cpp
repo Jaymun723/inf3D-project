@@ -34,32 +34,41 @@ Chunk::Chunk(cgp::vec3 position) : Chunk()
   int y = (int)position.y;
   int z = (int)position.z;
   // std::cout << "Chunk created at position (" << x << ", " << y << ", " << z << ")" << std::endl;
-  if (x % 2 == 0 && y % 2 == 0) {
-      build_type = 0;
+  if (x % 2 == 0 && y % 2 == 0)
+  {
+    build_type = 0;
   }
-  else if (x % 2 == 0) {
-	  build_type = 1;
+  else if (x % 2 == 0)
+  {
+    build_type = 1;
   }
-  else if (y % 2 == 0) {
-	  build_type = 2;
+  else if (y % 2 == 0)
+  {
+    build_type = 2;
   }
-  else {
-	  int random_value = rand() % 100;
-      if (random_value < 30) {
-		  build_type = 3; // House
-	  }
-	  else if (random_value < 40) {
-		  build_type = 4; // Maze
-	  }
-	  else if (random_value < 70) {
-		  build_type = 5; // River
-	  }
-	  else if (random_value < 80) {
-		  build_type = 6; // Snake
-	  }
-      else {
-          build_type = 7; // Tree
-      }
+  else
+  {
+    int random_value = rand() % 100;
+    if (random_value < 30)
+    {
+      build_type = 3; // House
+    }
+    else if (random_value < 40)
+    {
+      build_type = 4; // Maze
+    }
+    else if (random_value < 70)
+    {
+      build_type = 5; // River
+    }
+    else if (random_value < 80)
+    {
+      build_type = 6; // Snake
+    }
+    else
+    {
+      build_type = 7; // Tree
+    }
   }
 }
 
@@ -364,34 +373,35 @@ bool Chunk::BuildFunction()
 {
   Int3 p = m_position;
 
-  switch (build_type) {
+  switch (build_type)
+  {
   case 0:
-	  step = build_Crossroad(*this, step, speed);
-      break;
+    step = build_Crossroad(*this, step, speed);
+    break;
   case 1:
-	  step = build_Xroad(*this, step, speed);
-	  break;
+    step = build_Yroad(*this, step, speed);
+    break;
   case 2:
-	  step = build_Yroad(*this, step, speed);
-	  break;
+    step = build_Xroad(*this, step, speed);
+    break;
   case 3:
-	  step = build_house(*this, step, speed);
-	  break;
+    step = build_house(*this, step, speed);
+    break;
   case 4:
-	  step = build_maze(*this, step, speed);
-      break;
+    step = build_maze(*this, step, speed);
+    break;
   case 5:
-	  step = build_river(*this, step, speed);
-	  break;
+    step = build_river(*this, step, speed);
+    break;
   case 6:
-	  step = build_snake(*this, step, speed);
-	  break;
+    step = build_snake(*this, step, speed);
+    break;
   case 7:
-	  step = build_tree(*this, step, speed);
-	  break;
+    step = build_tree(*this, step, speed);
+    break;
   default:
-	  std::cout << "Invalid build type: " << build_type << std::endl;
-	  return false;
+    std::cout << "Invalid build type: " << build_type << std::endl;
+    return false;
   }
 
   return step != -1;

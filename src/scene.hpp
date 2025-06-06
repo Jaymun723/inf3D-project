@@ -4,6 +4,7 @@
 #include "environment.hpp"
 #include "voxel/chunk.hpp"
 #include "voxel/chunk_manager.hpp"
+#include "car.hpp"
 
 // This definitions allow to use the structures: mesh, mesh_drawable, etc.
 // without mentionning explicitly cgp::
@@ -29,7 +30,7 @@ struct scene_structure : cgp::scene_inputs_generic
   // Elements and shapes of the scene
   // ****************************** //
   // camera_controller_orbit_euler camera_control;
-  camera_controller_2d_displacement camera_control;
+  camera_controller_orbit_euler camera_control;
   camera_projection_perspective camera_projection;
   window_structure window;
 
@@ -43,12 +44,14 @@ struct scene_structure : cgp::scene_inputs_generic
   // Elements and shapes of the scene
   // ****************************** //
   ChunkManager manager;
-  cgp::skybox_drawable skybox;
+  skybox_drawable skybox;
+  Car car;
 
   // Timer used for the animation
   timer_basic timer;
 
   int frame_count = 0; // Counter for the number of frames displayed
+  float dt;
 
   // Step counters used for Markov rules
   // int build_tree_step = 0;
@@ -69,7 +72,7 @@ struct scene_structure : cgp::scene_inputs_generic
 
   void mouse_move_event();
   void mouse_click_event();
-  void keyboard_event();
+  void keyboard_event(int key, int action);
   void idle_frame();
 
   void display_info();
