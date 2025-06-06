@@ -59,7 +59,7 @@ void scene_structure::display_frame()
   draw(skybox, environment);
   glDepthMask(GL_TRUE); // re-activate depth-buffer write
 
-  // ++frame_count;
+  ++frame_count;
 
   // if (frame_count % 10 == 0)
   // {
@@ -69,7 +69,7 @@ void scene_structure::display_frame()
   //   build_house_step = build_house(chunk, build_house_step, 5);
   // }
 
-  manager.Update(camera_control.camera_model.position_camera);
+  manager.Update(camera_control.camera_model.position_camera, frame_count);
   manager.Render(environment);
 
   if (gui.display_frame)
