@@ -5,14 +5,24 @@ const vec3 Car::camera_offset = {-1, 0, 1};
 
 void Car::Initialize(camera_controller_orbit_euler &camera)
 {
-  m_position.z = 0.2f;
+  m_position.z = 0.185f;
   mesh car = mesh_primitive_cube({0, 0, 0}, 0.2);
   car.push_back(
-      mesh_primitive_cube({0.1, -0.05, -0.05}, 0.1));
+      mesh_primitive_cube({0.15, -0.05, -0.05}, 0.1));
   car.push_back(
-      mesh_primitive_cube({0.1, 0.05, -0.05}, 0.1));
+      mesh_primitive_cube({0.15, 0.05, -0.05}, 0.1));
+  car.color.fill(vec3(30.f, 195.f, 201.f) / 255.f);
 
   m_car_mesh.initialize_data_on_gpu(car);
+
+  // mesh front_wheels = mesh_primitive_cube({0.075, 0.1, -0.1}, 0.05);
+  // front_wheels.push_back(mesh_primitive_cube({0.075, -0.1, -0.1}, 0.05));
+  // front_wheels.color.fill(vec3(0.01, 0.01, 0.01));
+  mesh wheels = mesh_primitive_cube({0, 0.1, 0}, 0.05);
+  wheels.push_back(mesh_primitive_cube({0, -0.1, 0}, 0.05));
+  wheels.color.fill(vec3(0.01, 0.01, 0.01));
+
+  m_wheels_mesh.initialize_data_on_gpu(wheels);
 
   camera.set_rotation_axis_z();
   camera.look_at(camera_offset, {0, 0, 0}, {0, 0, 1});
@@ -24,6 +34,8 @@ void Car::Update(camera_controller_orbit_euler &camera, float dt)
 {
 
   m_speed += m_acceleration * 0.05;
+  // Dumping
+  m_speed += (m_speed > 0 ? -1 : (m_speed < 0 ? 1 : 0)) * 0.01;
   if (m_speed > MAX_SPEED)
   {
     m_speed = MAX_SPEED;
@@ -43,6 +55,7 @@ void Car::Update(camera_controller_orbit_euler &camera, float dt)
 
   m_position.x += speed * cos(m_angle) * dt;
   m_position.y += speed * sin(m_angle) * dt;
+  m_wheel_angle += (speed * dt) / 0.05;
   // if (norm(m_direction) < 0.1)
   // {
   //   return;
@@ -57,10 +70,26 @@ void Car::Update(camera_controller_orbit_euler &camera, float dt)
 
 void Car::Render(const environment_structure &environment)
 {
+  // Car :
+  rotation_transform car_rot = rotation_axis_angle({0, 0, 1}, m_angle);
   m_car_mesh.model.translation = m_position;
-  m_car_mesh.model.set_rotation(
-      m_car_mesh.model.rotation.from_axis_angle({0, 0, 1}, m_angle));
+  m_car_mesh.model.set_rotation(car_rot);
   draw(m_car_mesh, environment);
+
+  // Front wheel :
+  mat4 wheel_speed_rot = mat4::build_rotation_from_axis_angle({0, 1, 0}, m_wheel_angle);
+  mat4 translate_front = mat4::build_translation(vec3(0.12, 0, -0.1));
+  mat4 translate_back = mat4::build_translation(vec3(-0.04, 0, -0.1));
+  mat4 wheel_car_rot = mat4::build_rotation_from_axis_angle({0, 0, 1}, m_angle);
+  mat4 translate_position = mat4::build_translation(m_position);
+  m_wheels_mesh.model = affine::from_matrix(translate_position * wheel_car_rot * translate_front * wheel_speed_rot);
+  draw(m_wheels_mesh, environment);
+
+  m_wheels_mesh.model = affine::from_matrix(translate_position * wheel_car_rot * translate_back * wheel_speed_rot);
+  draw(m_wheels_mesh, environment);
+
+  // m_wheels_mesh.model.translation -= vec3(0.11, 0, 0);
+  // draw(m_wheels_mesh, environment);
 }
 
 void Car::WireRender(const environment_structure &environment)
@@ -124,7 +153,7 @@ void Car::HandleKeyboard(const environment_structure &environment, int key, int 
 vec3 Car::GetLightPosition()
 {
   vec3 front = {
-      cos(m_angle), sin(m_angle), -0.05};
+      cos(m_angle), sin(m_angle), -0.07};
 
-  return m_position + front * 0.23;
+  return m_position + front * 0.3;
 }

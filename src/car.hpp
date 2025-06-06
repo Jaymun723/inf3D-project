@@ -26,7 +26,9 @@ public:
 
 private:
   mesh_drawable m_car_mesh;
+  mesh_drawable m_wheels_mesh;
 
+  float m_wheel_angle;
   int m_acceleration;
   int m_orientation;
 };
