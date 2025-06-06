@@ -15,7 +15,25 @@ Int3::Int3() : x(0), y(0), z(0)
 
 Int3::Int3(int x, int y, int z) : x(x), y(y), z(z) {}
 
-Int3::Int3(vec3 position) : x(position.x), y(position.y), z(position.z) {}
+int correct_round(float x)
+{
+  int x_abs = std::abs(x);
+  if (x >= 0)
+  {
+    return x_abs;
+  }
+  else
+  {
+    return -x_abs - 1;
+  }
+}
+
+Int3::Int3(vec3 position)
+{
+  x = correct_round(position.x);
+  y = correct_round(position.y);
+  z = correct_round(position.z);
+}
 
 Int3 Int3::Neighboor(Directions dir) const
 {

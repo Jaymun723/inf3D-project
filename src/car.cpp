@@ -5,7 +5,7 @@ const vec3 Car::camera_offset = {-1, 0, 1};
 
 void Car::Initialize(camera_controller_orbit_euler &camera)
 {
-  m_position.z = 0.185f;
+  m_position = {0.5, 0.5, 0.185};
   mesh car = mesh_primitive_cube({0, 0, 0}, 0.2);
   car.push_back(
       mesh_primitive_cube({0.15, -0.05, -0.05}, 0.1));

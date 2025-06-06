@@ -3,11 +3,11 @@
 #include <iostream>
 #include <algorithm>
 
-const Int3 ChunkManager::RENDER_DISTANCE = Int3(4, 4, 0);
+const Int3 ChunkManager::RENDER_DISTANCE = Int3(12, 12, 0);
+const Int3 ChunkManager::COMPUTE_DISTANCE = Int3(1, 1, 0);
 
 ChunkManager::ChunkManager()
 {
-  // std::cout << "Hello from ChunkManager constructor !" << std::endl;
   m_previous_player_chunk_position = Int3(-10, -10, -10);
 }
 
@@ -18,68 +18,55 @@ bool ChunkManager::ChunkExists(const Int3 &pos) const
 
 void ChunkManager::Update(vec3 player_position, int frame_count)
 {
-  bool auto_unload = false;
-  // Step 0, update the computing chunks
-  if (m_computing_chunks.size() > 0)
-  {
-    auto it = m_computing_chunks.begin() + frame_count % m_computing_chunks.size();
+  Int3 player_chunk_position = Int3(player_position);
 
-    Int3 computing_pos = *it;
-    Chunk *chunk = m_chunk_map[computing_pos];
-    bool still_computing = chunk->BuildFunction();
-    chunk->m_should_render = still_computing;
-    chunk->UpdateMesh();
-    if (!still_computing)
+  // Step 1 updates nearest chunks.
+  for (int dx = -COMPUTE_DISTANCE.x; dx <= COMPUTE_DISTANCE.x; dx++)
+  {
+    for (int dy = -COMPUTE_DISTANCE.y; dy <= COMPUTE_DISTANCE.y; dy++)
     {
-      it = m_computing_chunks.erase(it);
-    }
-    else
-    {
-      it++;
+      Int3 p = player_chunk_position + Int3(dx, dy, 0);
+      if (ChunkExists(p))
+      {
+        Chunk *chunk = m_chunk_map[p];
+        bool still_computing = chunk->BuildFunction();
+        chunk->m_should_render = still_computing;
+        if (still_computing)
+        {
+          chunk->UpdateMesh();
+        }
+      }
     }
   }
 
-  // Step 1, compute chunk player position
-  Int3 player_chunk_position = Int3(player_position / Chunk::RENDER_CHUNK_SIZE.ToVec());
+  // Step 2, compute chunk player position
 
   // If same position as before, do nothing
   if (player_chunk_position == m_previous_player_chunk_position)
   {
-    // return;
+    return;
   }
   m_previous_player_chunk_position = player_chunk_position;
 
-  // Step 2, iterate over loaded chunks, unload the distant ones
-  if (auto_unload)
+  // Step 3, iterate over loaded chunks, unload the distant ones
+  for (auto it = m_loaded_chunks.begin(); it != m_loaded_chunks.end();)
   {
-
-    for (auto it = m_loaded_chunks.begin(); it != m_loaded_chunks.end();)
+    // Is the chunk distant ?
+    if (std::abs(it->x - player_chunk_position.x) > RENDER_DISTANCE.x || std::abs(it->y - player_chunk_position.y) > RENDER_DISTANCE.y ||
+        std::abs(it->z - player_chunk_position.z) > RENDER_DISTANCE.z)
     {
-      // Is the chunk distant ?
-      if (std::abs(it->x - player_chunk_position.x) > RENDER_DISTANCE.x || std::abs(it->y - player_chunk_position.y) > RENDER_DISTANCE.y ||
-          std::abs(it->z - player_chunk_position.z) > RENDER_DISTANCE.z)
-      {
-        Int3 pos = *it;
-        // Ensure chunk is not computing
-        if (std::find(m_computing_chunks.begin(), m_computing_chunks.end(), pos) == m_computing_chunks.end())
-        {
-          Chunk &chunk = GetChunk(pos);
-          chunk.UnLoad();
-          it = m_loaded_chunks.erase(it); // Erase returns next valid iterator
-        }
-        else
-        {
-          ++it;
-        }
-      }
-      else
-      {
-        ++it;
-      }
+      Int3 pos = *it;
+      Chunk &chunk = GetChunk(pos);
+      chunk.UnLoad();
+      it = m_loaded_chunks.erase(it); // Erase returns next valid iterator
+    }
+    else
+    {
+      ++it;
     }
   }
 
-  // Step 3, verify that chunks around the player are all present (if not create them) and loaded (if not load them)
+  // Step 4, verify that chunks around the player are all present (if not create them) and loaded (if not load them)
   for (int dx = -RENDER_DISTANCE.x; dx <= RENDER_DISTANCE.x; dx++)
   {
     for (int dy = -RENDER_DISTANCE.y; dy <= RENDER_DISTANCE.y; dy++)
@@ -94,18 +81,17 @@ void ChunkManager::Update(vec3 player_position, int frame_count)
           m_loaded_chunks.push_back(p);
         }
 
-        // std::cout << "p.x = " << p.x << " p.y = " << p.y << " p.z = " << p.z << std::endl;
         if (!ChunkExists(p))
         {
-          AddChunk(p);
+          int id = AddChunk(p);
+          if (p.x % 2 == 0 || p.y % 2 == 0)
+          {
+            m_chunks[id].BuildFunction(); // For roads
+          }
         }
-        // Only call Load if the chunk exists and is not already computing
-        if (std::find(m_computing_chunks.begin(), m_computing_chunks.end(), p) == m_computing_chunks.end())
-        {
-          Chunk *chunk = m_chunk_map[p];
-          m_computing_chunks.push_back(p);
-          chunk->Load();
-        }
+
+        Chunk *chunk = m_chunk_map[p];
+        chunk->Load();
       }
     }
   }
@@ -121,14 +107,7 @@ int ChunkManager::AddChunk(Int3 position)
   m_chunks.emplace_back(position); // Constructs in-place
   Chunk &chunk = m_chunks.back();  // Reference is valid
 
-  // chunk.HalfChunk(); // Initialize contents
-  // chunk.FullChunk();
-  // chunk.FlatChunk();
-
   m_chunk_map[position] = &chunk; // Store pointer
-
-  // Don't add to loaded_chunks here - let Update() handle it
-  // m_loaded_chunks.push_back(position); // <-- Remove this line
 
   return m_chunks.size() - 1;
 }
@@ -157,69 +136,15 @@ Chunk &ChunkManager::GetChunk(Int3 position)
   return *(it->second); // Dereference the pointer to get the reference
 }
 
-// void ChunkManager::Update(environment_structure environment) {
-//   UpdateLoadList();
-//   UpdateUnloadList();
-// }
-
 void ChunkManager::Render(const environment_structure &environment)
 {
   for (Chunk &chunk : m_chunks)
   {
-    // std::cout << "Rendering chunk from manager" << std::endl;
-    // std::cout << chunk.m_should_render << std::endl;
-    // std::cout << chunk.m_active_blocks << std::endl;
     chunk.Render(environment);
   }
 }
 
 void ChunkManager::WireRender(const environment_structure &environment)
 {
-  for (Chunk &chunk : m_chunks)
-  {
-    chunk.WireRender(environment);
-  }
+  GetChunk(m_previous_player_chunk_position).WireRender(environment);
 }
-
-// void ChunkManager::UpdateLoadList() {
-//   int lNumOfChunksLoaded = 0;
-
-//   for (Chunk *chunk : m_load_list) {
-//     if (!chunk->IsLoaded()) {
-
-//       if (lNumOfChunksLoaded != MAX_CHUNK) {
-
-//         chunk->Load(); // Increase the chunks loaded count
-
-//         lNumOfChunksLoaded++;
-
-//         // m_forceVisibilityUpdate = true;
-//       }
-//     }
-
-//   } // Clear the load list (every frame)
-
-//   m_load_list.clear();
-// }
-
-// void ChunkManager::UpdateUnloadList() {
-//   for (int i = 0; i < m_unload_list.size(); i++) {
-//     delete m_load_list[i];
-//   }
-//   m_unload_list.clear();
-// }
-
-// void ChunkManager::UpdateRenderList() {
-//   m_render_list.clear();
-//   for (Chunk *chunk : m_load_list) {
-//     if (/* visibility test && */ true) {
-//       if (chunk->m_should_render) {
-//         chunk->m_should_render = false;
-
-//         m_render_list.push_back(chunk);
-//       }
-//     } else {
-//       m_unload_list.push_back(chunk);
-//     }
-//   }
-// }

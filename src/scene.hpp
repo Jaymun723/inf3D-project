@@ -16,10 +16,8 @@ using cgp::vec3;
 
 struct gui_parameters
 {
-  bool display_frame = true;
+  bool display_frame = false;
   bool display_wireframe = false;
-
-  vec3 camera_position;
 };
 
 // The structure of the custom scene

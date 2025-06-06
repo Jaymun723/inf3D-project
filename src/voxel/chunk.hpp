@@ -30,7 +30,7 @@ public:
 
   vec3 m_position;
   int step = 0;
-  int speed = 10;
+  int speed = 1;
   int build_type = -1;
   bool BuildFunction();
 

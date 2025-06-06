@@ -23,6 +23,7 @@ public:
   void WireRender(const environment_structure &environment);
 
   static const Int3 RENDER_DISTANCE;
+  static const Int3 COMPUTE_DISTANCE;
 
 private:
   std::deque<Chunk> m_chunks;
@@ -30,7 +31,6 @@ private:
   Int3 m_previous_player_chunk_position;
 
   std::vector<Int3> m_loaded_chunks;
-  std::vector<Int3> m_computing_chunks;
 
   // std::vector<Chunk *> m_render_list;
   // std::vector<Chunk *> m_load_list;
