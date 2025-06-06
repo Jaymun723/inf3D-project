@@ -96,7 +96,7 @@ void Chunk::WireRender(const environment_structure &environment)
 
 Chunk::~Chunk()
 { // Delete the blocks
-  std::cout << "Deconstructor called on Chunk at (" << m_position.x << ", " << m_position.y << ", " << m_position.z << ")" << std::endl;
+  // std::cout << "Deconstructor called on Chunk at (" << m_position.x << ", " << m_position.y << ", " << m_position.z << ")" << std::endl;
   m_chunk_drawable_mesh.clear();
 
   for (int i = 0; i < BLOCK_CHUNK_SIZE.x; ++i)

@@ -140,8 +140,11 @@ int build_maze_aux(Chunk& C, int step) {
 		if (CleanMaze.applyRule(C, 50 + rand()%100)) {
 			break;
 		}
-		step = -1;
+		step = -2;
 		break;
+
+	case -2:
+		return -1;
 
 	case -1:
 		return -1;
@@ -156,6 +159,9 @@ int build_maze_aux(Chunk& C, int step) {
 int build_maze(Chunk& C, int step, int speed) {
 	for (int i = 0; i < speed; ++i) {
 		step = build_maze_aux(C, step);
+		if (step < 0) {
+			break;
+		}
 	}
 	return step;
 }
