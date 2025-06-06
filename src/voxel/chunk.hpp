@@ -28,7 +28,7 @@ public:
 
   bool m_should_render = true;
 
-  cgp::vec3 m_position;
+  vec3 m_position;
   int step = 0;
   int speed = 10;
   int build_type = -1;
@@ -43,10 +43,10 @@ public:
 
 private: // The blocks data
   void CreateMesh();
-  void AddQuadToMesh(cgp::mesh &chunk_mesh, const cgp::vec3 &block_position, Directions face_direction, const cgp::vec3 &color);
-  cgp::vec3 CalculateNormal(Directions face_direction);
+  void AddQuadToMesh(mesh &chunk_mesh, const vec3 &block_position, Directions face_direction, const vec3 &color);
+  vec3 CalculateNormal(Directions face_direction);
 
   bool m_loaded = false;
   int m_active_blocks = 0;
-  cgp::mesh_drawable m_chunk_drawable_mesh;
+  mesh_drawable m_chunk_drawable_mesh;
 };
