@@ -3,7 +3,7 @@
 #include <iostream>
 #include <algorithm>
 
-const Int3 ChunkManager::RENDER_DISTANCE = Int3(2, 2, 0);
+const Int3 ChunkManager::RENDER_DISTANCE = Int3(4, 4, 0);
 
 ChunkManager::ChunkManager()
 {

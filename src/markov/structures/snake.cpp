@@ -80,9 +80,12 @@ int build_snake_aux(Chunk &C, int step)
         }
         else
         {
-            step = -1;
+            step = -2;
             break;
         }
+
+    case -2:
+        return -1;
 
     case -1:
         return -1;
@@ -101,6 +104,9 @@ int build_snake(Chunk &C, int step, int speed)
     for (int i = 0; i < speed; ++i)
     {
         step = build_snake_aux(C, step);
+        if (step < 0) {
+            break;
+        }
     }
     return step;
 }
