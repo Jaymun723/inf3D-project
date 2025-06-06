@@ -1,6 +1,72 @@
 #include "road.hpp"
 
 
+
+int build_Xroad(Chunk& C, int step, int speed) {
+	if (step == -2) {
+		return -1;
+	}
+	int sizey = C.BLOCK_CHUNK_SIZE.y / 8;
+	for (int x = 0; x < C.BLOCK_CHUNK_SIZE.x; ++x) {
+		for (int y = 0; y < C.BLOCK_CHUNK_SIZE.y; ++y) {
+			if (y < sizey || y >= C.BLOCK_CHUNK_SIZE.y - sizey) {
+				C.m_pBlocks[x][y][0].block_type = BlockType_Sidewalk;
+			}
+			else if (y == C.BLOCK_CHUNK_SIZE.y / 2 && x / 3 % 2 == 0) {
+				C.m_pBlocks[x][y][0].block_type = BlockType_White_Line;
+			}
+			else {
+				C.m_pBlocks[x][y][0].block_type = BlockType_Road;
+			}
+		}
+	}
+	return -2;
+}
+
+
+int build_Yroad(Chunk& C, int step, int speed) {
+	if (step == -2) {
+		return -1;
+	}
+	int sizex = C.BLOCK_CHUNK_SIZE.x / 8;
+	for (int x = 0; x < C.BLOCK_CHUNK_SIZE.x; ++x) {
+		for (int y = 0; y < C.BLOCK_CHUNK_SIZE.y; ++y) {
+			if (x < sizex || x >= C.BLOCK_CHUNK_SIZE.x - sizex) {
+				C.m_pBlocks[x][y][0].block_type = BlockType_Sidewalk;
+			}
+			else if (x == C.BLOCK_CHUNK_SIZE.x / 2 && y / 3 % 2 == 0) {
+				C.m_pBlocks[x][y][0].block_type = BlockType_White_Line;
+			}
+			else {
+				C.m_pBlocks[x][y][0].block_type = BlockType_Road;
+			}
+		}
+	}
+	return -2;
+}
+
+int build_Crossroad(Chunk& C, int step, int speed) {
+	if (step == -2) {
+		return -1;
+	}
+	int sizex = C.BLOCK_CHUNK_SIZE.y / 8;
+	int sizey = C.BLOCK_CHUNK_SIZE.y / 8;
+	for (int x = 0; x < C.BLOCK_CHUNK_SIZE.x; ++x) {
+		for (int y = 0; y < C.BLOCK_CHUNK_SIZE.y; ++y) {
+			if ((x < sizex || x >= C.BLOCK_CHUNK_SIZE.x - sizex)
+				&& (y < sizey || y >= C.BLOCK_CHUNK_SIZE.y - sizey)) {
+				C.m_pBlocks[x][y][0].block_type = BlockType_Sidewalk;
+			}
+			else {
+				C.m_pBlocks[x][y][0].block_type = BlockType_Road;
+			}
+		}
+	}
+	return -2;
+}
+
+
+/*
 bool BuildBasicRoadRule::applies_to(const Chunk& C, const vec3& pos) const {
 	if (C.m_pBlocks[(int)pos.x][(int)pos.y][(int)pos.z].block_type != BlockType_Empty) {
 		return false;
@@ -201,7 +267,8 @@ int build_Xroad_aux(Chunk& C, int step) {
 	return step;
 }
 
-int build_Xroad(Chunk& C, int step, int speed) {
+
+int build_Xroadold(Chunk& C, int step, int speed) {
 	for (int i = 0; i < speed; ++i) {
 		step = build_Xroad_aux(C, step);
 	}
@@ -260,7 +327,7 @@ int build_Yroad_aux(Chunk& C, int step) {
 	return step;
 }
 
-int build_Yroad(Chunk& C, int step, int speed) {
+int build_Yroadold(Chunk& C, int step, int speed) {
 	for (int i = 0; i < speed; ++i) {
 		step = build_Yroad_aux(C, step);
 	}
@@ -310,4 +377,4 @@ int build_Crossroad(Chunk& C, int step, int speed) {
 	}
 	return step;
 }
-
+*/
