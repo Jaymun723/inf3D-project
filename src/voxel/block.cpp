@@ -11,10 +11,10 @@ vec3 Block::getColor() {
     return vec3(1, 0, 0);
 
   case BlockType_Grass_Tmp:
-	return vec3(0, 0.5f, 0.2f);
+	return vec3(0, 1, 0);
 
   case BlockType_Grass:
-    return vec3(0, 1, 0);
+    return vec3(0.071, 0.561f, 0.02f);
 
   case BlockType_Wood_Tmp:
       return vec3(0.5f, 0.25f, 0);
@@ -26,7 +26,7 @@ vec3 Block::getColor() {
 	  return vec3(0, 1, 0.2f);
 
   case BlockType_Leaf:
-      return vec3(0, 1, 0.2f);
+      return vec3(0.361f, 0.671f, 0.329f);
 
 
   case BlockType_Rainbow:

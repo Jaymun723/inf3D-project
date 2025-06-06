@@ -51,7 +51,9 @@ void Car::Update(camera_controller_orbit_euler &camera, float dt)
     speed = 0;
   }
 
-  m_angle += m_orientation * 1.2 * dt;
+  int sgn_speed = (speed > 0) - (speed < 0); // 1 if speed > 0, -1 if speed < 0, 0 if speed == 0
+
+  m_angle += m_orientation * 1.2 * dt * sgn_speed;
 
   m_position.x += speed * cos(m_angle) * dt;
   m_position.y += speed * sin(m_angle) * dt;
