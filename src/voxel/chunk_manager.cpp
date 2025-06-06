@@ -16,25 +16,28 @@ bool ChunkManager::ChunkExists(const Int3 &pos) const
   return m_chunk_map.find(pos) != m_chunk_map.end();
 }
 
-void ChunkManager::Update(vec3 player_position)
+void ChunkManager::Update(vec3 player_position, int frame_count)
 {
   // Step 0, update the computing chunks
-  for (auto it = m_computing_chunks.begin(); it != m_computing_chunks.end();)
-  {
-    Int3 computing_pos = *it;
-    Chunk *chunk = m_chunk_map[computing_pos];
-    bool still_computing = chunk->BuildFunction();
-    chunk->m_should_render = still_computing;
-    chunk->UpdateMesh();
-    if (!still_computing)
-    {
-      it = m_computing_chunks.erase(it);
-    }
-    else
-    {
-      it++;
-    }
+  if (m_computing_chunks.size() > 0) {
+      auto it = m_computing_chunks.begin() + frame_count % m_computing_chunks.size();
+
+      Int3 computing_pos = *it;
+      Chunk* chunk = m_chunk_map[computing_pos];
+      bool still_computing = chunk->BuildFunction();
+      chunk->m_should_render = still_computing;
+      chunk->UpdateMesh();
+      if (!still_computing)
+      {
+          it = m_computing_chunks.erase(it);
+      }
+      else
+      {
+          it++;
+      }
   }
+  
+  
 
   // Step 1, compute chunk player position
   Int3 player_chunk_position = Int3(player_position / Chunk::RENDER_CHUNK_SIZE.ToVec());
@@ -60,6 +63,7 @@ void ChunkManager::Update(vec3 player_position)
         Chunk &chunk = GetChunk(pos);
         chunk.UnLoad();
         it = m_loaded_chunks.erase(it); // Erase returns next valid iterator
+
       }
       else
       {
@@ -71,6 +75,7 @@ void ChunkManager::Update(vec3 player_position)
       ++it;
     }
   }
+
 
   // Step 3, verify that chunks around the player are all present (if not create them) and loaded (if not load them)
   for (int dx = -RENDER_DISTANCE.x; dx <= RENDER_DISTANCE.x; dx++)

@@ -10,7 +10,7 @@ class ChunkManager
 public:
   ChunkManager();
 
-  void Update(vec3 player_position);
+  void Update(vec3 player_position, int frame_count);
 
   int AddChunk(vec3 position);
   int AddChunk(Int3 position);
