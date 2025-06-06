@@ -19,11 +19,14 @@ public:
 
   void HandleKeyboard(const environment_structure &environment, int key, int action);
 
+  float m_speed;
+  float m_angle;
+
+  vec3 GetLightPosition();
+
 private:
   mesh_drawable m_car_mesh;
 
-  int acceleration;
-  int orientation;
-  float speed;
-  float m_angle;
+  int m_acceleration;
+  int m_orientation;
 };

@@ -18,9 +18,31 @@ void Car::Initialize(camera_controller_orbit_euler &camera)
   camera.look_at(camera_offset, {0, 0, 0}, {0, 0, 1});
 }
 
+const float MAX_SPEED = 2.0f;
+
 void Car::Update(camera_controller_orbit_euler &camera, float dt)
 {
 
+  m_speed += m_acceleration * 0.05;
+  if (m_speed > MAX_SPEED)
+  {
+    m_speed = MAX_SPEED;
+  }
+  else if (m_speed < -MAX_SPEED)
+  {
+    m_speed = -MAX_SPEED;
+  }
+
+  float speed = m_speed;
+  if (std::abs(speed) < 0.1)
+  {
+    speed = 0;
+  }
+
+  m_angle += m_orientation * 1.2 * dt;
+
+  m_position.x += speed * cos(m_angle) * dt;
+  m_position.y += speed * sin(m_angle) * dt;
   // if (norm(m_direction) < 0.1)
   // {
   //   return;
@@ -36,6 +58,8 @@ void Car::Update(camera_controller_orbit_euler &camera, float dt)
 void Car::Render(const environment_structure &environment)
 {
   m_car_mesh.model.translation = m_position;
+  m_car_mesh.model.set_rotation(
+      m_car_mesh.model.rotation.from_axis_angle({0, 0, 1}, m_angle));
   draw(m_car_mesh, environment);
 }
 
@@ -53,46 +77,54 @@ void Car::HandleKeyboard(const environment_structure &environment, int key, int 
   case GLFW_KEY_W:
     if (action != 0)
     {
-      acceleration = 1;
+      m_acceleration = 1;
     }
     else
     {
-      acceleration = 0;
+      m_acceleration = 0;
     }
     break;
   case GLFW_KEY_S:
     if (action != 0)
     {
-      acceleration = -1;
+      m_acceleration = -1;
     }
     else
     {
-      acceleration = 0;
+      m_acceleration = 0;
     }
     break;
   case GLFW_KEY_A:
     if (action != 0)
     {
-      orientation = 1;
+      m_orientation = 1;
     }
     else
     {
-      orientation = 0;
+      m_orientation = 0;
     }
     break;
 
   case GLFW_KEY_D:
     if (action != 0)
     {
-      orientation = -1;
+      m_orientation = -1;
     }
     else
     {
-      orientation = 0;
+      m_orientation = 0;
     }
     break;
 
   default:
     break;
   }
+}
+
+vec3 Car::GetLightPosition()
+{
+  vec3 front = {
+      cos(m_angle), sin(m_angle), -0.05};
+
+  return m_position + front * 0.23;
 }
