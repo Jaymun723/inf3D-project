@@ -54,7 +54,7 @@ void scene_structure::initialize()
 void scene_structure::display_frame()
 {
   // Set the light to the current position of the camera
-  environment.light = camera_control.camera_model.position();
+  environment.light = car.GetLightPosition();
 
   //  Must be called before drawing the other shapes and without writing in the Depth Buffer
   glDepthMask(GL_FALSE); // disable depth-buffer writing
@@ -98,6 +98,8 @@ void scene_structure::display_gui()
   ImGui::Checkbox("Frame", &gui.display_frame);
   ImGui::Checkbox("Wireframe", &gui.display_wireframe);
   // ImGui::SliderFloat3("Camera position", &gui.camera_position[0], -4, 4);
+  // ImGui::SliderFloat("Speed", &car.m_speed, -10, 10);
+  // ImGui::SliderFloat("Angle", &car.m_angle, -10, 10);
 }
 
 void scene_structure::mouse_move_event()
