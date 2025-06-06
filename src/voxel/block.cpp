@@ -39,10 +39,10 @@ vec3 Block::getColor() {
       return vec3(1, 0, 0);
 
   case BlockType_Plank:
-	  return vec3(0.8f, 0.52f, 0.25f);
+	  return vec3(0.851f, 0.996f, 1.0f);
 
   case BlockType_Flat_Roof:
-	  return vec3(0.2f, 0.52f, 0.25f);
+	  return vec3(0, 0, 0);
 
   case BlockType_Pillar:
 	  return vec3(0.9f, 0.9f, 0.9f);
