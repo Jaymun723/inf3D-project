@@ -28,7 +28,7 @@ void Car::Initialize(camera_controller_orbit_euler &camera)
   camera.look_at(camera_offset, {0, 0, 0}, {0, 0, 1});
 }
 
-const float MAX_SPEED = 2.0f;
+const float MAX_SPEED = 1.0f;
 
 void Car::Update(camera_controller_orbit_euler &camera, float dt)
 {

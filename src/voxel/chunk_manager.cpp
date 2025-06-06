@@ -3,7 +3,6 @@
 #include <iostream>
 #include <algorithm>
 
-const Int3 ChunkManager::RENDER_DISTANCE = Int3(12, 12, 0);
 const Int3 ChunkManager::COMPUTE_DISTANCE = Int3(1, 1, 0);
 
 ChunkManager::ChunkManager()
@@ -29,7 +28,7 @@ void ChunkManager::Update(vec3 player_position, int frame_count)
       if (ChunkExists(p))
       {
         Chunk *chunk = m_chunk_map[p];
-        bool still_computing = chunk->BuildFunction();
+        bool still_computing = chunk->BuildFunction(speed);
         chunk->m_should_render = still_computing;
         if (still_computing)
         {
@@ -86,7 +85,7 @@ void ChunkManager::Update(vec3 player_position, int frame_count)
           int id = AddChunk(p);
           if (p.x % 2 == 0 || p.y % 2 == 0)
           {
-            m_chunks[id].BuildFunction(); // For roads
+            m_chunks[id].BuildFunction(speed); // For roads
           }
         }
 

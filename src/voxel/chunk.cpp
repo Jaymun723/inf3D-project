@@ -369,7 +369,7 @@ void Chunk::UnLoad()
   }
 }
 
-bool Chunk::BuildFunction()
+bool Chunk::BuildFunction(int speed)
 {
   Int3 p = m_position;
 

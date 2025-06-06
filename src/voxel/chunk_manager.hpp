@@ -22,7 +22,8 @@ public:
   void Render(const environment_structure &environment);
   void WireRender(const environment_structure &environment);
 
-  static const Int3 RENDER_DISTANCE;
+  Int3 ChunkManager::RENDER_DISTANCE = Int3(3, 3, 0);
+  int speed = 1;
   static const Int3 COMPUTE_DISTANCE;
 
 private:

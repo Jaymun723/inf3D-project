@@ -74,8 +74,13 @@ void scene_structure::display_frame()
   car.Update(camera_control, dt);
   car.Render(environment);
 
-  manager.Update(car.m_position, frame_count);
+  manager.RENDER_DISTANCE = Int3(gui.render_distance, gui.render_distance, 0);
+  if (frame_count % 5 == 0)
+  {
+	  manager.Update(car.m_position, frame_count);
+  }
   manager.Render(environment);
+
 
   if (gui.display_frame)
     draw(global_frame, environment);
@@ -97,6 +102,8 @@ void scene_structure::display_gui()
 {
   ImGui::Checkbox("Frame", &gui.display_frame);
   ImGui::Checkbox("Wireframe", &gui.display_wireframe);
+  ImGui::SliderInt("Render Distance", &gui.render_distance, 1, 10);
+  ImGui::SliderInt("Chunk Speed", &manager.speed, 1, 100);
   // ImGui::SliderFloat3("Camera position", &gui.camera_position[0], -4, 4);
   // ImGui::SliderFloat("Speed", &car.m_speed, -10, 10);
   // ImGui::SliderFloat("Angle", &car.m_angle, -10, 10);
