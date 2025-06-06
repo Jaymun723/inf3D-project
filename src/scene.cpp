@@ -16,11 +16,11 @@ void scene_structure::initialize()
   camera_control.initialize(inputs,
                             window); // Give access to the inputs and window
                                      // global state to the camera controler
+  camera_control.set_rotation_axis_z();
+  camera_control.look_at({3.0f, 2.0f, 2.0f}, {0, 0, 0}, {0, 0, 1});
+  // camera_control.camera_model.position_camera = { 3.0f, 2.0f, 20.0f };
+  // camera_control.look_at({0, 0.2, 0}, {1, 0.2, 0});
   // camera_control.set_rotation_axis_z();
-  // camera_control.look_at({3.0f, 2.0f, 2.0f}, {0, 0, 0}, {0, 0, 1});
-
-  camera_control.look_at({0, 0.2, 0}, {1, 0.2, 0});
-  camera_control.set_rotation_axis_y();
 
   display_info();
   global_frame.initialize_data_on_gpu(mesh_primitive_frame());
@@ -38,7 +38,11 @@ void scene_structure::initialize()
   std::vector<image_structure> image_grid = image_split_grid(image_skybox_template, 4, 3);
 
   skybox.initialize_data_on_gpu();
-  skybox.texture.initialize_cubemap_on_gpu(image_grid[1], image_grid[7], image_grid[5], image_grid[3], image_grid[10], image_grid[4]);
+  // skybox.texture.initialize_cubemap_on_gpu(image_grid[1], image_grid[7], image_grid[5], image_grid[3], image_grid[10], image_grid[4]);
+  int i = 0;
+  skybox.texture.initialize_cubemap_on_gpu(image_grid[4].rotate_90_degrees_clockwise().mirror_horizontal(), image_grid[10].rotate_90_degrees_clockwise(), image_grid[1].mirror_horizontal(), image_grid[7], image_grid[5], image_grid[3]);
+
+ 
 }
 
 void scene_structure::display_frame()
