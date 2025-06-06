@@ -43,7 +43,7 @@ bool general_BuildGround_rule_applies_to(const Chunk &C, const vec3 &pos, BlockT
     {
         return false;
     }
-    vec3 directions[6] = {vec3(1, 0, 0), vec3(-1, 0, 0), vec3(0, 1, 0), vec3(0, -1, 0)};
+    vec3 directions[4] = {vec3(1, 0, 0), vec3(-1, 0, 0), vec3(0, 1, 0), vec3(0, -1, 0)};
     for (const vec3 &dir : directions)
     {
         vec3 new_pos = pos + dir;

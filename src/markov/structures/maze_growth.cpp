@@ -140,10 +140,14 @@ int build_maze_aux(Chunk& C, int step) {
 		if (CleanMaze.applyRule(C, 50 + rand()%100)) {
 			break;
 		}
-		step = 5;
+		step = -1;
 		break;
 
+	case -1:
+		return -1;
+
 	default:
+		std::cout << "Invalid step in build_maze_aux: " << step << std::endl;
 		break;
 	}
 	return step;
@@ -153,6 +157,5 @@ int build_maze(Chunk& C, int step, int speed) {
 	for (int i = 0; i < speed; ++i) {
 		step = build_maze_aux(C, step);
 	}
-	C.UpdateMesh();
 	return step;
 }
