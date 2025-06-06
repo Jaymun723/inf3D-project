@@ -1,6 +1,7 @@
 #include "chunk.hpp"
 #include "markov/structures/road.hpp"
 #include "markov/structures/river.hpp"
+#include "markov/structures/crossroads.hpp"
 #include <iostream>
 
 using namespace cgp;
@@ -324,10 +325,19 @@ void Chunk::UnLoad()
   }
 }
 
-
 bool Chunk::BuildFunction()
 {
-    int old_step = step;
-	step = build_river(*this, step, speed);
-    return old_step != step;
+  Int3 p = m_position;
+
+  if (p.y % 2 == 0)
+  {
+    step = build_Xroad(*this, step, speed);
+    // step = build
+  }
+  else
+  {
+    step = build_river(*this, step, speed);
+  }
+
+  return step != -1;
 }

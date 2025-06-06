@@ -51,7 +51,7 @@ void ChunkManager::Update(vec3 player_position)
   {
     // Is the chunk distant ?
     if (std::abs(it->x - player_chunk_position.x) > RENDER_DISTANCE.x || std::abs(it->y - player_chunk_position.y) > RENDER_DISTANCE.y ||
-        std::abs(it->z - player_chunk_position.z) > RENDER_DISTANCE.z || player_chunk_position.z - it->z <= 0)
+        std::abs(it->z - player_chunk_position.z) > RENDER_DISTANCE.z)
     {
       Int3 pos = *it;
       // Ensure chunk is not computing
@@ -77,7 +77,7 @@ void ChunkManager::Update(vec3 player_position)
   {
     for (int dy = -RENDER_DISTANCE.y; dy <= RENDER_DISTANCE.y; dy++)
     {
-      for (int dz = -1; dz <= -1; dz++)
+      for (int dz = 0; dz <= 0; dz++)
       {
         Int3 p = player_chunk_position + Int3(dx, dy, dz);
 

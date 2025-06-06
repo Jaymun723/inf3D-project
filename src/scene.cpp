@@ -12,43 +12,41 @@ using namespace cgp;
 
 void scene_structure::initialize()
 {
-    srand((unsigned int)time(NULL));
-    camera_control.initialize(inputs,
-        window); // Give access to the inputs and window
-    // global state to the camera controler
-    camera_control.set_rotation_axis_z();
-    camera_control.look_at({ 3.0f, 2.0f, 2.0f }, { 0, 0, 0 }, { 0, 0, 1 });
-    // camera_control.camera_model.position_camera = { 3.0f, 2.0f, 20.0f };
-    // camera_control.look_at({0, 0.2, 0}, {1, 0.2, 0});
-    // camera_control.set_rotation_axis_z();
+  srand((unsigned int)time(NULL));
+  camera_control.initialize(inputs,
+                            window); // Give access to the inputs and window
+  // global state to the camera controler
+  camera_control.set_rotation_axis_z();
+  camera_control.look_at({0.5f, 0.5f, 0.2f}, {0, 0, 0}, {0, 0, 1});
+  // camera_control.camera_model.position_camera = { 3.0f, 2.0f, 20.0f };
+  // camera_control.look_at({0, 0.2, 0}, {1, 0.2, 0});
+  // camera_control.set_rotation_axis_z();
 
-    display_info();
-    global_frame.initialize_data_on_gpu(mesh_primitive_frame());
+  display_info();
+  global_frame.initialize_data_on_gpu(mesh_primitive_frame());
 
-    // int first_id = manager.AddChunk(vec3(0, 0, 0));
+  // int first_id = manager.AddChunk(vec3(0, 0, 0));
 
-    // std::cout << "First id: " << first_id << std::endl;
+  // std::cout << "First id: " << first_id << std::endl;
 
-    // Chunk &chunk = manager.GetChunk(first_id);
-    // faire tes trucs avec chunk
+  // Chunk &chunk = manager.GetChunk(first_id);
+  // faire tes trucs avec chunk
 
-    image_structure image_skybox_template = image_load_file(project::path + "assets/skybox_01.png");
+  image_structure image_skybox_template = image_load_file(project::path + "assets/skybox_01.png");
 
-    // Split the image into a grid of 4 x 3 sub-images
-    std::vector<image_structure> image_grid = image_split_grid(image_skybox_template, 4, 3);
+  // Split the image into a grid of 4 x 3 sub-images
+  std::vector<image_structure> image_grid = image_split_grid(image_skybox_template, 4, 3);
 
-    skybox.initialize_data_on_gpu();
-    // skybox.texture.initialize_cubemap_on_gpu(image_grid[1], image_grid[7], image_grid[5], image_grid[3], image_grid[10], image_grid[4]);
-    int i = 0;
-    skybox.texture.initialize_cubemap_on_gpu(
-        image_grid[4].rotate_90_degrees_clockwise().mirror_vertical(),  // +X
-        image_grid[10].rotate_90_degrees_clockwise().mirror_horizontal(), // -X
-        image_grid[1].mirror_horizontal(),                                // +Y
-        image_grid[7].mirror_vertical(),                                                    // -Y
-        image_grid[5].rotate_90_degrees_counterclockwise().mirror_horizontal(),                                                    // +Z 
-        image_grid[3].rotate_90_degrees_counterclockwise().mirror_horizontal());                                           // +Z
-
-
+  skybox.initialize_data_on_gpu();
+  // skybox.texture.initialize_cubemap_on_gpu(image_grid[1], image_grid[7], image_grid[5], image_grid[3], image_grid[10], image_grid[4]);
+  int i = 0;
+  skybox.texture.initialize_cubemap_on_gpu(
+      image_grid[4].rotate_90_degrees_clockwise().mirror_vertical(),           // +X
+      image_grid[10].rotate_90_degrees_clockwise().mirror_horizontal(),        // -X
+      image_grid[1].mirror_horizontal(),                                       // +Y
+      image_grid[7].mirror_vertical(),                                         // -Y
+      image_grid[5].rotate_90_degrees_counterclockwise().mirror_horizontal(),  // +Z
+      image_grid[3].rotate_90_degrees_counterclockwise().mirror_horizontal()); // +Z
 }
 
 void scene_structure::display_frame()
