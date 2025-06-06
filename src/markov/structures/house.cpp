@@ -399,7 +399,6 @@ int build_house_aux(Chunk &C, int step)
 		break;
 
 	case 12:
-		std::cout << "Reach cleaning single blocks step" << std::endl;
 
 		if (CleanSingleBlocks.applyRule(C, -1))
 		{
@@ -409,7 +408,6 @@ int build_house_aux(Chunk &C, int step)
 		break;
 
 	case 13:
-		std::cout << "Reach pillars step" << std::endl;
 		if (BuildPillar.applyRule(C, -1))
 		{
 			break;

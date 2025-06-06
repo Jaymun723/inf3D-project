@@ -61,7 +61,7 @@ void ExtendLeafRule::apply(Chunk &C, const vec3 &pos) const
                 {
                     if (rand() % 4 > 0)
                     {
-                        if (rand() % 8 == 0 && count_new_tmp < 2)
+                        if (rand() % 10 == 0 && count_new_tmp < 2)
                         {
                             count_new_tmp++;
                             C.m_pBlocks[nx][ny][nz].block_type = BlockType_Leaf_Tmp;

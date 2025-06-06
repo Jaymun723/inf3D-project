@@ -1,5 +1,56 @@
 #include "river.hpp"
 
+
+
+bool ExpandGrassesRule::applies_to(const Chunk& C, const vec3& pos) const
+{
+	if (pos.z != 0) {
+		return false;
+	}
+	if (C.m_pBlocks[(int)pos.x][(int)pos.y][(int)pos.z].block_type != BlockType_Grass
+		&& C.m_pBlocks[(int)pos.x][(int)pos.y][(int)pos.z].block_type != BlockType_Grass_Tmp)
+	{
+		return false;
+	}
+	vec3 directions[8] = { vec3(1, 0, 0), vec3(-1, 0, 0), vec3(0, 1, 0), vec3(0, -1, 0), vec3(1, 1, 0), vec3(1, -1, 0), vec3(-1, -1, 0), vec3(-1, 1, 0) };
+	for (const vec3& dir : directions) {
+		vec3 new_pos = pos + dir;
+		if (new_pos.x < 0 || new_pos.x >= C.BLOCK_CHUNK_SIZE.x ||
+			new_pos.y < 0 || new_pos.y >= C.BLOCK_CHUNK_SIZE.y ||
+			new_pos.z < 0 || new_pos.z >= C.BLOCK_CHUNK_SIZE.z)
+		{
+			continue; // Out of bounds
+		}
+		if (C.m_pBlocks[(int)new_pos.x][(int)new_pos.y][(int)new_pos.z].block_type == BlockType_Empty)
+		{
+			return true; // Found an empty block adjacent to grass
+		}
+	}
+	return false;
+}
+
+
+void ExpandGrassesRule::apply(Chunk& C, const vec3& pos) const
+{
+	vec3 directions[8] = { vec3(1, 0, 0), vec3(-1, 0, 0), vec3(0, 1, 0), vec3(0, -1, 0), vec3(1, 1, 0), vec3(1, -1, 0), vec3(-1, -1, 0), vec3(-1, 1, 0) };
+	for (const vec3& dir : directions) {
+		vec3 new_pos = pos + dir;
+		if (new_pos.x < 0 || new_pos.x >= C.BLOCK_CHUNK_SIZE.x ||
+			new_pos.y < 0 || new_pos.y >= C.BLOCK_CHUNK_SIZE.y ||
+			new_pos.z < 0 || new_pos.z >= C.BLOCK_CHUNK_SIZE.z)
+		{
+			continue; // Out of bounds
+		}
+		if (C.m_pBlocks[(int)new_pos.x][(int)new_pos.y][(int)new_pos.z].block_type == BlockType_Empty)
+		{
+			C.m_pBlocks[(int)new_pos.x][(int)new_pos.y][(int)new_pos.z].block_type = C.m_pBlocks[(int)pos.x][(int)pos.y][(int)pos.z].block_type;
+		}
+	}
+}
+
+ExtendedMR ExpandGrasses = ExtendedMR({ std::make_shared<ExpandGrassesRule>() });
+
+
 bool BuildRiverRule::applies_to(const Chunk &C, const vec3 &pos) const
 {
 	if (C.m_pBlocks[(int)pos.x][(int)pos.y][(int)pos.z].block_type != BlockType_Grass_Tmp)
@@ -160,14 +211,23 @@ int build_river_aux(Chunk &C, int step)
 		break;
 
 	case 1:
-		found_normal = BuildGroundGrass.applyRule(C, 5);
-		found_tmp = BuildGroundGrassTmp.applyRule(C, 5);
+		
+		found_normal = BuildGroundGrass.applyRule(C, 10);
+		found_tmp = BuildGroundGrassTmp.applyRule(C, 10);
 		if (found_normal || found_tmp)
 		{
 			break;
 		}
 		step = 2;
 		break;
+		
+		/*
+		if (ExpandGrasses.applyRule(C, 1))
+		{
+			break;
+		}
+		step = 2;
+		break;*/
 
 	case 2:
 		if (BuildRiver.applyRule(C, 1))

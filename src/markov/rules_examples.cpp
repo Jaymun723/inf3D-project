@@ -39,6 +39,10 @@ BasicMR appear = BasicMR({appear_OldRule});
 
 bool general_BuildGround_rule_applies_to(const Chunk &C, const vec3 &pos, BlockType type)
 {
+	if (pos.z != 0)
+	{
+		return false; // Only applies to the ground level
+	}
     if (C.m_pBlocks[(int)pos.x][(int)pos.y][(int)pos.z].block_type != BlockType_Empty)
     {
         return false;
