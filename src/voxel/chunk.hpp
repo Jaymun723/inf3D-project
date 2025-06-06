@@ -31,6 +31,7 @@ public:
   cgp::vec3 m_position;
   int step = 0;
   int speed = 1;
+  int build_type = -1;
   bool BuildFunction();
 
   // How many blocks in each direction
