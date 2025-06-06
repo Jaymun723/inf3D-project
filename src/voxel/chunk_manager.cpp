@@ -3,7 +3,7 @@
 #include <iostream>
 #include <algorithm>
 
-const Int3 ChunkManager::RENDER_DISTANCE = Int3(4, 4, 1);
+const Int3 ChunkManager::RENDER_DISTANCE = Int3(1, 1, 1);
 
 ChunkManager::ChunkManager()
 {
@@ -18,6 +18,24 @@ bool ChunkManager::ChunkExists(const Int3 &pos) const
 
 void ChunkManager::Update(vec3 player_position)
 {
+  // Step 0, update the computing chunks
+  for (auto it = m_computing_chunks.begin(); it != m_computing_chunks.end();)
+  {
+    Int3 computing_pos = *it;
+    Chunk *chunk = m_chunk_map[computing_pos];
+    bool still_computing = chunk->BuildFunction();
+    chunk->m_should_render = still_computing;
+    chunk->UpdateMesh();
+    if (!still_computing)
+    {
+      it = m_computing_chunks.erase(it);
+    }
+    else
+    {
+      it++;
+    }
+  }
+
   // Step 1, compute chunk player position
   Int3 player_chunk_position = Int3(player_position / Chunk::RENDER_CHUNK_SIZE.ToVec());
 
@@ -31,22 +49,28 @@ void ChunkManager::Update(vec3 player_position)
   // Step 2, iterate over loaded chunks, unload the distant ones
   for (auto it = m_loaded_chunks.begin(); it != m_loaded_chunks.end();)
   {
-    // if (it->Manhattan(player_chunk_position) > RENDER_DISTANCE)
+    // Is the chunk distant ?
     if (std::abs(it->x - player_chunk_position.x) > RENDER_DISTANCE.x || std::abs(it->y - player_chunk_position.y) > RENDER_DISTANCE.y ||
         std::abs(it->z - player_chunk_position.z) > RENDER_DISTANCE.z || player_chunk_position.z - it->z <= 0)
     {
-      Chunk &chunk = GetChunk(*it);
-      chunk.UnLoad();
-      it = m_loaded_chunks.erase(it); // Erase returns next valid iterator
+      Int3 pos = *it;
+      // Ensure chunk is not computing
+      if (std::find(m_computing_chunks.begin(), m_computing_chunks.end(), pos) == m_computing_chunks.end())
+      {
+        Chunk &chunk = GetChunk(pos);
+        chunk.UnLoad();
+        it = m_loaded_chunks.erase(it); // Erase returns next valid iterator
+      }
+      else
+      {
+        ++it;
+      }
     }
     else
     {
       ++it;
     }
   }
-
-  // DON'T clear m_loaded_chunks here!
-  // m_loaded_chunks.clear(); // <-- Remove this line
 
   // Step 3, verify that chunks around the player are all present (if not create them) and loaded (if not load them)
   for (int dx = -RENDER_DISTANCE.x; dx <= RENDER_DISTANCE.x; dx++)
@@ -55,7 +79,6 @@ void ChunkManager::Update(vec3 player_position)
     {
       for (int dz = -1; dz <= -1; dz++)
       {
-        // std::cout << " dz = " << dz << std::endl;
         Int3 p = player_chunk_position + Int3(dx, dy, dz);
 
         // Only add to loaded_chunks if it's not already there
@@ -69,10 +92,13 @@ void ChunkManager::Update(vec3 player_position)
         {
           AddChunk(p);
         }
-        // Only call UpdateMesh if the chunk exists and is not already loaded
-        Chunk *chunk = m_chunk_map[p];
-		chunk->BuildFunction(); // Call the build function with step and speed
-        chunk->UpdateMesh();
+        // Only call Load if the chunk exists and is not already computing
+        if (std::find(m_computing_chunks.begin(), m_computing_chunks.end(), p) == m_computing_chunks.end())
+        {
+          Chunk *chunk = m_chunk_map[p];
+          m_computing_chunks.push_back(p);
+          chunk->Load();
+        }
       }
     }
   }
@@ -90,7 +116,7 @@ int ChunkManager::AddChunk(Int3 position)
 
   // chunk.HalfChunk(); // Initialize contents
   // chunk.FullChunk();
-  chunk.FlatChunk();
+  // chunk.FlatChunk();
 
   m_chunk_map[position] = &chunk; // Store pointer
 
