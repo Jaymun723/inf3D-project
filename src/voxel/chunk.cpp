@@ -1,4 +1,6 @@
 #include "chunk.hpp"
+#include "markov/structures/road.hpp"
+#include "markov/structures/river.hpp"
 #include <iostream>
 
 using namespace cgp;
@@ -259,9 +261,9 @@ void Chunk::FlatChunk()
 {
   for (int x = 0; x < BLOCK_CHUNK_SIZE.x; x++)
   {
-    for (int z = 0; z < BLOCK_CHUNK_SIZE.z; z++)
+    for (int y = 0; y < BLOCK_CHUNK_SIZE.y; y++)
     {
-      m_pBlocks[x][0][z].block_type = BlockType_Default;
+      m_pBlocks[x][y][0].block_type = BlockType_Default;
     }
   }
 }
@@ -320,4 +322,10 @@ void Chunk::UnLoad()
     m_should_render = true;
     m_loaded = false;
   }
+}
+
+
+void Chunk::BuildFunction()
+{
+	step =  build_river(*this, step, speed);
 }

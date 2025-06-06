@@ -29,6 +29,9 @@ public:
   bool m_should_render = true;
 
   cgp::vec3 m_position;
+  int step = 0;
+  int speed = 1;
+  void BuildFunction();
 
   // How many blocks in each direction
   static const Int3 BLOCK_CHUNK_SIZE;

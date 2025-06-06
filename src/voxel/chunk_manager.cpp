@@ -3,7 +3,7 @@
 #include <iostream>
 #include <algorithm>
 
-const Int3 ChunkManager::RENDER_DISTANCE = Int3(4, 0, 4);
+const Int3 ChunkManager::RENDER_DISTANCE = Int3(4, 4, 1);
 
 ChunkManager::ChunkManager()
 {
@@ -24,7 +24,7 @@ void ChunkManager::Update(vec3 player_position)
   // If same position as before, do nothing
   if (player_chunk_position == m_previous_player_chunk_position)
   {
-    return;
+    // return;
   }
   m_previous_player_chunk_position = player_chunk_position;
 
@@ -33,7 +33,7 @@ void ChunkManager::Update(vec3 player_position)
   {
     // if (it->Manhattan(player_chunk_position) > RENDER_DISTANCE)
     if (std::abs(it->x - player_chunk_position.x) > RENDER_DISTANCE.x || std::abs(it->y - player_chunk_position.y) > RENDER_DISTANCE.y ||
-        std::abs(it->z - player_chunk_position.z) > RENDER_DISTANCE.z)
+        std::abs(it->z - player_chunk_position.z) > RENDER_DISTANCE.z || player_chunk_position.z - it->z <= 0)
     {
       Chunk &chunk = GetChunk(*it);
       chunk.UnLoad();
@@ -53,7 +53,7 @@ void ChunkManager::Update(vec3 player_position)
   {
     for (int dy = -RENDER_DISTANCE.y; dy <= RENDER_DISTANCE.y; dy++)
     {
-      for (int dz = -RENDER_DISTANCE.z; dz <= RENDER_DISTANCE.z; dz++)
+      for (int dz = -1; dz <= -1; dz++)
       {
         // std::cout << " dz = " << dz << std::endl;
         Int3 p = player_chunk_position + Int3(dx, dy, dz);
@@ -71,6 +71,7 @@ void ChunkManager::Update(vec3 player_position)
         }
         // Only call UpdateMesh if the chunk exists and is not already loaded
         Chunk *chunk = m_chunk_map[p];
+		chunk->BuildFunction(); // Call the build function with step and speed
         chunk->UpdateMesh();
       }
     }
