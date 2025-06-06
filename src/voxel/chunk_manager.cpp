@@ -18,6 +18,7 @@ bool ChunkManager::ChunkExists(const Int3 &pos) const
 
 void ChunkManager::Update(vec3 player_position, int frame_count)
 {
+  bool auto_unload = false;
   // Step 0, update the computing chunks
   if (m_computing_chunks.size() > 0)
   {
@@ -49,28 +50,32 @@ void ChunkManager::Update(vec3 player_position, int frame_count)
   m_previous_player_chunk_position = player_chunk_position;
 
   // Step 2, iterate over loaded chunks, unload the distant ones
-  for (auto it = m_loaded_chunks.begin(); it != m_loaded_chunks.end();)
+  if (auto_unload)
   {
-    // Is the chunk distant ?
-    if (std::abs(it->x - player_chunk_position.x) > RENDER_DISTANCE.x || std::abs(it->y - player_chunk_position.y) > RENDER_DISTANCE.y ||
-        std::abs(it->z - player_chunk_position.z) > RENDER_DISTANCE.z)
+
+    for (auto it = m_loaded_chunks.begin(); it != m_loaded_chunks.end();)
     {
-      Int3 pos = *it;
-      // Ensure chunk is not computing
-      if (std::find(m_computing_chunks.begin(), m_computing_chunks.end(), pos) == m_computing_chunks.end())
+      // Is the chunk distant ?
+      if (std::abs(it->x - player_chunk_position.x) > RENDER_DISTANCE.x || std::abs(it->y - player_chunk_position.y) > RENDER_DISTANCE.y ||
+          std::abs(it->z - player_chunk_position.z) > RENDER_DISTANCE.z)
       {
-        Chunk &chunk = GetChunk(pos);
-        chunk.UnLoad();
-        it = m_loaded_chunks.erase(it); // Erase returns next valid iterator
+        Int3 pos = *it;
+        // Ensure chunk is not computing
+        if (std::find(m_computing_chunks.begin(), m_computing_chunks.end(), pos) == m_computing_chunks.end())
+        {
+          Chunk &chunk = GetChunk(pos);
+          chunk.UnLoad();
+          it = m_loaded_chunks.erase(it); // Erase returns next valid iterator
+        }
+        else
+        {
+          ++it;
+        }
       }
       else
       {
         ++it;
       }
-    }
-    else
-    {
-      ++it;
     }
   }
 
