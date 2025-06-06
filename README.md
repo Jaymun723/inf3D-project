@@ -10,7 +10,7 @@ git clone --recurse-submodules https://github.com/Jaymun723/inf3D-project.git
 *Partie : optimisation*
 
 1. ~~Finir le chunk manager~~
-2. Optimisation du rendu des mesh : au lieu que la mesh contienne tous les cubes, seuls les faces visibles doivent être envoyées
+2. ~~Optimisation du rendu des mesh : au lieu que la mesh contienne tous les cubes, seuls les faces visibles doivent être envoyées~~
 
 *Partie : rendre le truc utilisable*
 
@@ -19,7 +19,7 @@ git clone --recurse-submodules https://github.com/Jaymun723/inf3D-project.git
 *Partie : rendre le truc joli*
 
 4. Faire des blocs joli, mat, brillant
-5. Skybox 
+5. ~~Skybox~~
 
 *Partie : rendre le truc joli, si on le temps*
 

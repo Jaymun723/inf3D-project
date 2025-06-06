@@ -19,8 +19,8 @@ void scene_structure::initialize()
   // camera_control.set_rotation_axis_z();
   // camera_control.look_at({3.0f, 2.0f, 2.0f}, {0, 0, 0}, {0, 0, 1});
 
-  camera_control.look_at({0, 0, 0.2}, {1, 0, 0.2});
-  camera_control.set_rotation_axis_z();
+  camera_control.look_at({0, 0.2, 0}, {1, 0.2, 0});
+  camera_control.set_rotation_axis_y();
 
   display_info();
   global_frame.initialize_data_on_gpu(mesh_primitive_frame());
@@ -31,12 +31,26 @@ void scene_structure::initialize()
 
   // Chunk &chunk = manager.GetChunk(first_id);
   // faire tes trucs avec chunk
+
+  image_structure image_skybox_template = image_load_file(project::path + "assets/skybox_01.png");
+
+  // Split the image into a grid of 4 x 3 sub-images
+  std::vector<image_structure> image_grid = image_split_grid(image_skybox_template, 4, 3);
+
+  skybox.initialize_data_on_gpu();
+  skybox.texture.initialize_cubemap_on_gpu(image_grid[1], image_grid[7], image_grid[5], image_grid[3], image_grid[10], image_grid[4]);
 }
 
 void scene_structure::display_frame()
 {
   // Set the light to the current position of the camera
   environment.light = camera_control.camera_model.position();
+
+  //  Must be called before drawing the other shapes and without writing in the Depth Buffer
+  glDepthMask(GL_FALSE); // disable depth-buffer writing
+  draw(skybox, environment);
+  glDepthMask(GL_TRUE); // re-activate depth-buffer write
+
   // ++frame_count;
 
   // if (frame_count % 10 == 0)

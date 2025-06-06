@@ -259,9 +259,9 @@ void Chunk::FlatChunk()
 {
   for (int x = 0; x < BLOCK_CHUNK_SIZE.x; x++)
   {
-    for (int y = 0; y < BLOCK_CHUNK_SIZE.y; y++)
+    for (int z = 0; z < BLOCK_CHUNK_SIZE.z; z++)
     {
-      m_pBlocks[x][y][0].block_type = BlockType_Default;
+      m_pBlocks[x][0][z].block_type = BlockType_Default;
     }
   }
 }
